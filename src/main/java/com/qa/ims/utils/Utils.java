@@ -26,14 +26,14 @@ public class Utils {
 			try {
 				longInput = Long.parseLong(input);
 			} catch (NumberFormatException nfe) {
-				LOGGER.info("Error - Please enter a number");
+				LOGGER.info("Error - Please enter a number.");
 			}
 		} while (longInput == null);
 		return longInput;
 	}
 
 	public String getString() {
-		return scanner.nextLine();
+		return scanner.nextLine().toLowerCase();
 	}
 
 	public Double getDouble() {
@@ -43,10 +43,47 @@ public class Utils {
 			try {
 				doubleInput = Double.parseDouble(input);
 			} catch (NumberFormatException nfe) {
-				LOGGER.info("Error - Please enter a number");
+				LOGGER.info("Error - Please enter a number.");
 			}
 		} while (doubleInput == null);
 		return doubleInput;
+	}
+	
+	public int getInt() {
+		
+		String input;
+		int intOut = 0;
+		input = getString();
+		try {
+			intOut = Integer.parseInt(input);
+		} 
+		catch(NumberFormatException nfe) {
+			LOGGER.info("Error - Please enter a number.");
+			getInt();
+		}
+		return intOut;
+	}
+	
+	public boolean getBool() {
+		
+	    String trueString = "true"; 
+	    String yesString = "y";
+	    String falseString = "false";
+	    String noString = "n";
+		boolean boolOut = false;
+		
+		String input = getString();
+
+			if (input.equals(trueString) || input.equals(yesString)) {
+		          return true;
+		      } else if (input.equals(falseString) || input.equals(noString)) {
+		          return false;
+		      }else {
+		    	LOGGER.info("Error - Please enter true/false or y/n.");
+				getBool();
+		      }
+
+		return boolOut;
 	}
 
 }
