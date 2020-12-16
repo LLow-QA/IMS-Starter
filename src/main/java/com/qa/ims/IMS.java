@@ -1,3 +1,5 @@
+//ARE YOU ON A FEATURE BRANCH
+
 package com.qa.ims;
 
 import org.apache.logging.log4j.LogManager;
@@ -45,7 +47,7 @@ public class IMS {
 				case CUSTOMER:
 					active = this.customers;
 					break;
-				case ITEM:
+				case PRODUCT:
 					active = null;
 					break;
 				case ORDER:
