@@ -31,7 +31,13 @@ public class ProductController implements CrudController<Product>{
 	@Override
 	public List<Product> readAll() {
 		
-		return null;
+		List<Product> products = productDAO.readAll();
+		for (Product product : products) {
+			
+			LOGGER.info(product.toString());
+			
+		}
+		return products;
 	}
 
 	@Override
@@ -56,14 +62,33 @@ public class ProductController implements CrudController<Product>{
 
 	@Override
 	public Product update() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		LOGGER.info("Please enter the id of the product you would like to update: ");
+		Long id = utils.getLong();
+		
+		LOGGER.info("Please update the product name: ");
+		String name = utils.getString();
+		
+		LOGGER.info("Please update the product description: ");
+		String desc = utils.getString();
+		
+		LOGGER.info("Please update the products price: ");
+		double price = utils.getDouble();
+		
+		LOGGER.info("Please update the products stock: ");
+		int stock = utils.getInt();
+		
+		
+		Product product = productDAO.update(new Product(id, name, desc, price, stock));
+		LOGGER.info("Customer Updated");
+		return product;
 	}
 
 	@Override
 	public int delete() {
-		// TODO Auto-generated method stub
-		return 0;
+		LOGGER.info("Please enter the id of the product you would like to delete: ");
+		Long id = utils.getLong();
+		return productDAO.delete(id);
 	}
 	
 	

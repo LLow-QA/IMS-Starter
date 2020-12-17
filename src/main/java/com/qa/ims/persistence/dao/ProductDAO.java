@@ -6,10 +6,12 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 
 import com.qa.ims.persistence.domain.Product;
 import com.qa.ims.utils.DBUtils;
@@ -21,8 +23,26 @@ public class ProductDAO implements Dao<Product> {
 	
 	@Override
 	public List<Product> readAll() {
-		// TODO Auto-generated method stub
-		return null;
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				 Statement statement = connection.createStatement();
+				 ResultSet resultSet = statement.executeQuery("select * from products");) {
+				
+				List<Product> products = new ArrayList<>();
+				
+				while (resultSet.next()) {
+					
+					products.add(modelFromResultSet(resultSet));
+					
+				}
+				return products;
+				
+			} catch (SQLException e) {
+				
+				LOGGER.debug(e);
+				LOGGER.error(e.getMessage());
+				
+			}
+			return new ArrayList<>();
 	}
 
 	@Override
@@ -47,16 +67,58 @@ public class ProductDAO implements Dao<Product> {
 		
 		return null;
 	}
+	
+	public Product readProduct(Long id) {
+		
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM products where product_id = " + id);) {
+			
+			resultSet.next();
+			return modelFromResultSet(resultSet);
+			
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+			
+		}
+		return null;
+	}
 
 	@Override
-	public Product update(Product t) {
-		// TODO Auto-generated method stub
+	public Product update(Product product) {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();) {
+			
+			statement.executeUpdate("update products set product_name ='" + product.getName() + "', product_desc ='"
+					+ product.getDescription() + "', price ='" + product.getPrice() + "', stock ='"
+					+ product.getStock());
+			
+			return readProduct(product.getId());
+			
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+			
+		}
 		return null;
 	}
 
 	@Override
 	public int delete(long id) {
-		// TODO Auto-generated method stub
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();) {
+			
+			return statement.executeUpdate("delete from products where product_id = " + id);
+			
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+			
+		}
 		return 0;
 	}
 
