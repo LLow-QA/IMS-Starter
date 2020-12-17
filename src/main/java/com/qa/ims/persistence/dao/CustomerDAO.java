@@ -177,5 +177,50 @@ public class CustomerDAO implements Dao<Customer> {
 		}
 		return 0;
 	}
+	
+	public boolean returningCustomer(String email) {
+		
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT  email FROM customers");) {
+			
+			while(resultSet.next()) {
+				String mail = resultSet.getString("email");
+				if(email.equals(mail))
+				{
+					
+					return true;
+			
+				}
+			}
+			
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+			
+		}
+		return false;
+	}
+	
+	public Long returningCustomerID(String email) {
+		
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT  customer_id FROM customers WHERE email = " + email);) {
+			
+			resultSet.next();
+			Long id = resultSet.getLong("customer_id");
+			return id;
+				
+			
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+			
+		}
+		return null;
+	}
 
 }
