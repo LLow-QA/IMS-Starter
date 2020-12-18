@@ -124,7 +124,7 @@ public class CustomerController implements CrudController<Customer> {
 		
 		LOGGER.info("Please enter the id of the customer you would like to delete: ");
 		Long id = utils.getLong();
-		return customerDAO.delete(id);
+		return customerDAO.delete(id); //use cascade
 		
 	}
 

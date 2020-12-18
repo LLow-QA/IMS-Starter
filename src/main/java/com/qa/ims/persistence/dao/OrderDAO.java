@@ -64,6 +64,7 @@ public class OrderDAO implements Dao<Order>{
 
 	@Override
 	public Order create(Order order) {
+		
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
 			
@@ -147,6 +148,25 @@ public class OrderDAO implements Dao<Order>{
 		double totalCost = resultSet.getDouble("total_cost");
 		
 		return new Order(orderID, customerID, dateOrdered, totalCost);
+	}
+	
+	public Order updateTotalPrice(double total) {
+		
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();) {
+			
+			statement.executeUpdate("update orders set total_cost ='" + total + "WHERE order_id = " + readLatest().getOrderID());
+			
+			return readOrder(readLatest().getOrderID());
+			
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+			
+		}
+		return null;
+		
 	}
 
 }
