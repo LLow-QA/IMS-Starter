@@ -152,5 +152,23 @@ public class ProductDAO implements Dao<Product> {
 		return null;
 	}
 	
+	public Long returnProductID(String name) {
+		
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				 Statement statement = connection.createStatement();
+				 ResultSet resultSet = statement.executeQuery("SELECT product_id FROM products WHERE product_name =" + name);) {
+				
+				resultSet.next();
+				return resultSet.getLong("product_id");
+				
+			} catch (Exception e) {
+				
+				LOGGER.debug(e);
+				LOGGER.error(e.getMessage());
+				
+			}
+		return null;
+	}
+
 
 }
