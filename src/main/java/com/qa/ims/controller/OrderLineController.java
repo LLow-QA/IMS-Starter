@@ -1,6 +1,5 @@
 package com.qa.ims.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -9,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import com.qa.ims.persistence.dao.OrderDAO;
 import com.qa.ims.persistence.dao.OrderLineDAO;
 import com.qa.ims.persistence.dao.ProductDAO;
-import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.persistence.domain.OrderLine;
 import com.qa.ims.utils.Utils;
 
@@ -71,8 +69,69 @@ public class OrderLineController implements CrudController<OrderLine> {
 
 	@Override
 	public OrderLine update() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		boolean more = true;
+		boolean correct = false;
+		Long orderLineID = null;
+		Long productID = null;
+		OrderLine orderLine = null;
+		
+		//choosing which order the customer wants to update
+		Long orderChoice = utils.getLong();
+		Long orderID = orderDAO.allOrdersByCust(orderChoice).getOrderID();
+		
+		if (orderID != null) {
+			
+			update();
+			
+		}
+		
+		
+		//choosing which orderline the customer wants to update
+		while(more) {
+			
+			orderLineDAO.allOrderLinesByOrder(orderID);
+			do {
+			
+				LOGGER.info("Please select the ID you would like to change: ");
+				Long orderLineChoice = utils.getLong();
+				orderLineID = orderLineDAO.readOrderLine(orderLineChoice).getOrderLineID();
+				
+				if (orderLineID != null) {
+					correct = true;
+				}
+				
+			}while(!correct);
+			
+			correct = false;
+			
+			do {
+				
+				LOGGER.info("Which product to you want to update/change: ");
+				String productName = utils.getString();
+				productID = productDAO.returnProductID(productName);
+				
+				if (productID != null) {
+					correct = true;
+				}
+			
+			}while(!correct);
+			
+			
+			LOGGER.info("Please update the order quantity: ");
+			int quant = utils.getInt();
+			
+			orderLine = orderLineDAO.update(new OrderLine(orderLineID,orderID,productID,quant));
+			
+			LOGGER.info(orderLine);
+			
+			
+			LOGGER.info("Do you want to make any more updates? y/n");
+			more = utils.getBool();
+		}
+		
+		
+		return orderLine;
 	}
 
 	@Override
