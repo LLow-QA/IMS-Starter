@@ -67,9 +67,9 @@ public class OrderLineDAO implements Dao<OrderLine>{
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
 			
-			statement.executeUpdate("INSERT INTO orderline(orderline_id, order_id, product_id, product_quantity)"
-					+ " values('"+ orderLine.getOrderLineID()+ "','" + orderLine.getOrderID()
-					+ "','" + orderLine.getProductID() + "','" + orderLine.getQuantity() + "');");
+			statement.executeUpdate("INSERT INTO orderline(order_id, product_id, product_quantity)"
+					+ " values('" + orderLine.getOrderID()+ "','" + orderLine.getProductID() +
+							   "','" + orderLine.getQuantity() + "');");
 			
 			return readLatest();
 			
@@ -147,5 +147,45 @@ public class OrderLineDAO implements Dao<OrderLine>{
 		return new OrderLine(orderLineID, orderID, productID, quantity);
 	}
 	
-
+	
+	public ResultSet allOrderLinesByOrder(Long id) {
+		
+		try (Connection connection = DBUtils.getInstance().getConnection();
+			 Statement statement = connection.createStatement();
+			 ResultSet resultSet = statement.executeQuery("SELECT orderline_id, product_name, product_quantity, price FROM orderline join products on "
+						+ "orderline.product_id = products.product_id where order_id = " + id);) {
+			
+			resultSet.next();
+			return resultSet;
+			
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+			
+		}
+		return null;
+	}
+	
+	public float updateTotalPriceUpdate(Long orderID) {
+		
+		
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				 Statement statement = connection.createStatement();
+				 ResultSet resultSet = statement.executeQuery("SELECT SUM(product_quantity*price) AS orderline_price FROM orderline JOIN products on "
+				 		+ "orderline.product_id = products.product_id WHERE order_id = "+ orderID);){
+			
+			return resultSet.getFloat(1);
+			
+			
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+			
+		}
+		return 0;
+		
+	}
+	
 }

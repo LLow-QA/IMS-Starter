@@ -150,7 +150,7 @@ public class OrderDAO implements Dao<Order>{
 		return new Order(orderID, customerID, dateOrdered, totalCost);
 	}
 	
-	public Order updateTotalPrice(double total) {
+	public Order updateTotalPriceCreate(double total) {
 		
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
@@ -167,6 +167,24 @@ public class OrderDAO implements Dao<Order>{
 		}
 		return null;
 		
+	}
+	
+	public Order allOrdersByCust(Long id) {
+		
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM orders where customer_id = " + id);) {
+			
+			resultSet.next();
+			return modelFromResultSet(resultSet);
+			
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+			
+		}
+		return null;
 	}
 
 }

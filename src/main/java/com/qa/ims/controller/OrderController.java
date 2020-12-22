@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import com.qa.ims.persistence.dao.CustomerDAO;
 import com.qa.ims.persistence.dao.OrderDAO;
 import com.qa.ims.persistence.dao.OrderLineDAO;
-import com.qa.ims.persistence.dao.ProductDAO;
 import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.utils.Utils;
 
@@ -78,15 +77,14 @@ public class OrderController implements CrudController<Order> {
 			for (int i = 0; i < orderLineIDs.size();i++) {
 				
 				total = total + (orderLineDAO.readOrderLine(orderLineIDs.get(i)).getQuantity())*
-								(orderLineController.productPrice(orderLineDAO.readOrderLine
-								(orderLineIDs.get(i)).getProductID()));
+								(orderLineController.productPrice(orderLineDAO.readOrderLine(orderLineIDs.get(i)).getProductID()));
 							
 			}
 			
-			
+			orderLineIDs.clear();
 			
 			LOGGER.info("Order created");
-			return orderDAO.updateTotalPrice(total);
+			return orderDAO.updateTotalPriceCreate(total);
 			
 		} else {
 			LOGGER.info("It appears that you dont have an account registered to this email." + '\n' + 
@@ -107,7 +105,48 @@ public class OrderController implements CrudController<Order> {
 
 	@Override
 	public Order update() {
-								//// NEED TO FILL OUT ORDERLINE IN ORDER TO ENABLE UPDATES
+		
+		float total = 0;
+		
+		LOGGER.info("Please enter your email address: ");
+		String email = utils.getString();
+		
+		if(customerDAO.returningCustomer(email)) {
+			
+			Long customerID = customerDAO.returningCustomerID(email);
+			
+			orderDAO.allOrdersByCust(customerID);
+			LOGGER.info("please enter the order ID that you would like to update: ");
+			Long orderID = orderLineController.update().getOrderID();
+			
+			long millis=System.currentTimeMillis();  
+			java.sql.Date date=new java.sql.Date(millis);  
+			Date orderDate = date;  
+			
+			total = orderLineDAO.updateTotalPriceUpdate(orderID);
+			
+			Order order = orderDAO.update(new Order(orderID,customerID,orderDate,total));
+			return order;
+			
+		} else {
+			
+			LOGGER.info("It appears that you dont have an account registered to this email." + '\n' + 
+						"Would you like to create an account (y/n)?");
+			boolean decision = utils.getBool();
+					
+			if (decision) {
+				
+				customerController.create();
+				LOGGER.info("You have to create an order to be able to update it!" + '\n' +
+							"Sending you to create an order.");
+				create();
+				
+			} else {
+				
+				LOGGER.info("Please try again.");
+				update();
+			}
+		}
 		return null;
 	}
 
