@@ -37,13 +37,13 @@ public class CustomerControllerTest {
 		final int AGE = 20;
 		final Customer created = new Customer(F_NAME, L_NAME, AGE, EMAIL, PASSWORD, ADDRESS, POSTCODE);
 
-		Mockito.when(utils.getString()).thenReturn(F_NAME, L_NAME,EMAIL,ADDRESS,POSTCODE,PASSWORD);
+		Mockito.when(utils.getString()).thenReturn(F_NAME, L_NAME,EMAIL,PASSWORD,ADDRESS,POSTCODE);
 		Mockito.when(utils.getInt()).thenReturn(AGE);
 		Mockito.when(dao.create(created)).thenReturn(created);
 
 		assertEquals(created, controller.create());
 
-		Mockito.verify(utils, Mockito.times(2)).getString();
+		Mockito.verify(utils, Mockito.times(6)).getString();
 		Mockito.verify(dao, Mockito.times(1)).create(created);
 	}
 
@@ -73,7 +73,7 @@ public class CustomerControllerTest {
 		assertEquals(updated, this.controller.update());
 
 		Mockito.verify(this.utils, Mockito.times(1)).getLong();
-		Mockito.verify(this.utils, Mockito.times(2)).getString();
+		Mockito.verify(this.utils, Mockito.times(6)).getString();
 		Mockito.verify(this.dao, Mockito.times(1)).update(updated);
 	}
 

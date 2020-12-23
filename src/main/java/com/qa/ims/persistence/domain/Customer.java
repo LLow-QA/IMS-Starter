@@ -20,9 +20,10 @@ public class Customer {
 		this.surname = surname;
 		this.age = age;
 		this.email = email;
+		this.password  = password;
 		this.address = address;
 		this.postcode = postcode;
-		this.password  = password;
+		
 		
 	}
 
@@ -34,9 +35,10 @@ public class Customer {
 		this.surname = surname;
 		this.age = age;
 		this.email = email;
+		this.password  = password;
 		this.address = address;
 		this.postcode = postcode;
-		this.password  = password;
+		
 	}
 
 	public Long getId() {

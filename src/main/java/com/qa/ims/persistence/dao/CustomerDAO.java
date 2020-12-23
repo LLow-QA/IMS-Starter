@@ -24,7 +24,7 @@ public class CustomerDAO implements Dao<Customer> {
 		
 		Long id = resultSet.getLong("customer_id");
 		String firstName = resultSet.getString("fName");
-		String surname = resultSet.getString("sName");
+		String surname = resultSet.getString("lName");
 		int age = resultSet.getInt("age");
 		String email = resultSet.getString("email");
 		String password = resultSet.getString("password");
@@ -92,11 +92,11 @@ public class CustomerDAO implements Dao<Customer> {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
 			
-			statement.executeUpdate("INSERT INTO customers(fName, sName, age, email, password,"
+			statement.executeUpdate("INSERT INTO customers(fName, lName, age, email, password,"
 					+ "address, postcode) values('" + customer.getFirstName()+ "','" 
-					+ customer.getSurname() + "','" + "'" + customer.getAge()+ "','"
-					+ "'" + customer.getEmail()+ "','" + "'" + customer.getPassword()+ "','" +
-					"'" + customer.getAddress()+ "','" + "'" + customer.getPostcode()+   "');");
+					+ customer.getSurname() + "'," + customer.getAge()+ ",'"
+					+ customer.getEmail()+ "','"  + customer.getPassword()+ "','" +
+					 customer.getAddress()+ "','" + customer.getPostcode()+   "');");
 			
 			return readLatest();
 			
@@ -140,10 +140,11 @@ public class CustomerDAO implements Dao<Customer> {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
 			
-			statement.executeUpdate("update customers set fName ='" + customer.getFirstName() + "', sName ='"
-					+ customer.getSurname() + "', age ='" + customer.getAge() + "', email ='"
-					+ customer.getEmail() + "', password ='" + customer.getAddress() + "', postcode ='"
-					+ customer.getPostcode() + "' where customer_id =" + customer.getId());
+			statement.executeUpdate("update customers set fName = '" + customer.getFirstName() + "', lName = '"
+					+ customer.getSurname() + "', age = " + customer.getAge() + ", email = '"
+					+ customer.getEmail() + "', password = '" + customer.getPassword() + "', address = '" 
+					+ customer.getAddress() + "', postcode = '" + customer.getPostcode() +
+					"' where customer_id =" + customer.getId());
 			
 			return readCustomer(customer.getId());
 			
@@ -207,7 +208,7 @@ public class CustomerDAO implements Dao<Customer> {
 		
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery("SELECT  customer_id FROM customers WHERE email = " + email);) {
+				ResultSet resultSet = statement.executeQuery("SELECT  customer_id FROM customers WHERE email = '" + email + "'");) {
 			
 			resultSet.next();
 			Long id = resultSet.getLong("customer_id");
