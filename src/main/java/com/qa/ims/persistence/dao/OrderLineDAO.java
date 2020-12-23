@@ -68,8 +68,8 @@ public class OrderLineDAO implements Dao<OrderLine>{
 				Statement statement = connection.createStatement();) {
 			
 			statement.executeUpdate("INSERT INTO orderline(order_id, product_id, product_quantity)"
-					+ " values('" + orderLine.getOrderID()+ "','" + orderLine.getProductID() +
-							   "','" + orderLine.getQuantity() + "');");
+					+ " values(" + orderLine.getOrderID()+ "," + orderLine.getProductID() +
+							   "," + orderLine.getQuantity() + ");");
 			
 			return readLatest();
 			
@@ -106,8 +106,8 @@ public class OrderLineDAO implements Dao<OrderLine>{
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
 			
-			statement.executeUpdate("update orderline set order_id ='" + orderLine.getOrderID() +
-					"', product_id ='"+ orderLine.getProductID() + "', product_quantity ='" + orderLine.getQuantity());
+			statement.executeUpdate("update orderline set order_id = " + orderLine.getOrderID() +
+					", product_id = "+ orderLine.getProductID() + ", product_quantity = " + orderLine.getQuantity());
 			
 			return readOrderLine(orderLine.getOrderLineID());
 			

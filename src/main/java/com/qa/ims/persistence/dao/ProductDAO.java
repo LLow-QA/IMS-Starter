@@ -53,8 +53,8 @@ public class ProductDAO implements Dao<Product> {
 			
 			statement.executeUpdate("INSERT INTO product(product_name, product_desc, price, stock)"
 					+ " values('" + product.getName()+ "','" 
-					+ product.getDescription() + "','" + "'" + product.getPrice()+ "','"
-					+ "'" + product.getStock()+ "');");
+					+ product.getDescription() + "'," + product.getPrice()+ ",'"
+					+ product.getStock()+ ");");
 			
 			return readLatest();
 			
@@ -91,9 +91,9 @@ public class ProductDAO implements Dao<Product> {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
 			
-			statement.executeUpdate("update products set product_name ='" + product.getName() + "', product_desc ='"
-					+ product.getDescription() + "', price ='" + product.getPrice() + "', stock ='"
-					+ product.getStock());
+			statement.executeUpdate("update products set product_name = '" + product.getName() + "', product_desc = '"
+					+ product.getDescription() + "', price = " + product.getPrice() + ", stock = "
+					+ product.getStock() + ");");
 			
 			return readProduct(product.getId());
 			
@@ -156,7 +156,7 @@ public class ProductDAO implements Dao<Product> {
 		
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				 Statement statement = connection.createStatement();
-				 ResultSet resultSet = statement.executeQuery("SELECT product_id FROM products WHERE product_name =" + name);) {
+				 ResultSet resultSet = statement.executeQuery("SELECT product_id FROM products WHERE product_name = '" + name +"'");) {
 				
 				resultSet.next();
 				return resultSet.getLong("product_id");

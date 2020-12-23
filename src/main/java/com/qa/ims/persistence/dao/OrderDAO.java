@@ -68,8 +68,8 @@ public class OrderDAO implements Dao<Order>{
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
 			
-			statement.executeUpdate("INSERT INTO orders(customer_id, date_ordered, total_cost) values('"
-					+ order.getCustomerID()+ "','" + order.getDateOrdered()+ "','" + order.getTotalCost() +"');");
+			statement.executeUpdate("INSERT INTO orders(customer_id, date_ordered, total_cost) values("
+					+ order.getCustomerID()+ "," + order.getDateOrdered()+ "," + order.getTotalCost() +");");
 			
 			return readLatest();
 			
@@ -107,8 +107,8 @@ public class OrderDAO implements Dao<Order>{
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
 			
-			statement.executeUpdate("update orders set customer_id ='" + order.getCustomerID() + "', date_ordered ='"
-					+ order.getDateOrdered() + "', total_cost ='" + order.getTotalCost());
+			statement.executeUpdate("update orders set customer_id = " + order.getCustomerID() + ", date_ordered = "
+					+ order.getDateOrdered() + ", total_cost = " + order.getTotalCost());
 			
 			return readOrder(order.getOrderID());
 			
@@ -155,7 +155,7 @@ public class OrderDAO implements Dao<Order>{
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
 			
-			statement.executeUpdate("update orders set total_cost ='" + total + "WHERE order_id = " + readLatest().getOrderID());
+			statement.executeUpdate("update orders set total_cost = " + total + "WHERE order_id = " + readLatest().getOrderID());
 			
 			return readOrder(readLatest().getOrderID());
 			
