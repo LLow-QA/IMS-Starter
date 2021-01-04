@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import com.qa.ims.controller.ProductController;
 import com.qa.ims.persistence.dao.ProductDAO;
 import com.qa.ims.persistence.domain.Product;
@@ -26,8 +25,11 @@ public class ProductControllerTest {
 	@Mock
 	private ProductDAO productDao;
 
+	
 	@InjectMocks
 	private ProductController productController;
+
+
 	
 	
 	@Test

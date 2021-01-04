@@ -2,17 +2,17 @@
 
 package com.qa.ims.persistence.domain;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Order {
 	
 	private Long orderID;
 	private Long customerID;
 	private Date dateOrdered;
-	private double totalCost;
+	private Double totalCost;
 	
 	
-	public Order(Long orderID, Long customerID, Date dateOrdered, double totalCost) {
+	public Order(Long orderID, Long customerID, Date dateOrdered, Double totalCost) {
 		super();
 		this.orderID = orderID;
 		this.customerID = customerID;
@@ -21,7 +21,7 @@ public class Order {
 	}
 
 
-	public Order(Long customerID, Date dateOrdered, double totalCost) {
+	public Order(Long customerID, Date dateOrdered, Double totalCost) {
 		super();
 		this.customerID = customerID;
 		this.dateOrdered = dateOrdered;
@@ -59,21 +59,23 @@ public class Order {
 	}
 
 
-	public double getTotalCost() {
+	public Double getTotalCost() {
 		return totalCost;
 	}
 
 
-	public void setTotalCost(double totalCost) {
+	public void setTotalCost(Double totalCost) {
 		this.totalCost = totalCost;
 	}
 
 
 	@Override
 	public String toString() {
-		return "Order [orderID=" + orderID + ", customerID=" + customerID + ", dateOrdered=" + dateOrdered
-				+ ", totalCost=" + totalCost + "]";
+		return "Order: Order ID = " + orderID + ", Customer ID = " + customerID + ", Date ordered = " + dateOrdered
+				+ ", Total cost = " + totalCost;
 	}
+
+
 
 
 	@Override
@@ -100,11 +102,16 @@ public class Order {
 				return false;
 		} else if (!orderID.equals(other.orderID))
 			return false;
-		if (Double.doubleToLongBits(totalCost) != Double.doubleToLongBits(other.totalCost))
+		if (totalCost == null) {
+			if (other.totalCost != null)
+				return false;
+		} else if (!totalCost.equals(other.totalCost))
 			return false;
 		return true;
 	}
-	
+
+
+
 	
 
 }

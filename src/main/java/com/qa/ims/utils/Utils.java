@@ -88,6 +88,10 @@ public class Utils {
 		return boolOut;
 	}
 	
+	public void scannerClose() {
+		
+		scanner.close();
+	}
 	
 
 }

@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 import com.qa.ims.persistence.dao.ProductDAO;
 import com.qa.ims.persistence.domain.Product;
 import com.qa.ims.utils.Utils;
@@ -88,6 +87,7 @@ public class ProductController implements CrudController<Product>{
 	public int delete() {
 		LOGGER.info("Please enter the id of the product you would like to delete: ");
 		Long id = utils.getLong();
+		
 		return productDAO.delete(id);
 	}
 	

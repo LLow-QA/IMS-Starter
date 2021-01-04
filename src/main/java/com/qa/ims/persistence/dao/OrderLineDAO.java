@@ -11,12 +11,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.persistence.domain.OrderLine;
+import com.qa.ims.persistence.domain.OrderLineAndProduct;
 import com.qa.ims.utils.DBUtils;
 
 
 public class OrderLineDAO implements Dao<OrderLine>{
 	
 	public static final Logger LOGGER = LogManager.getLogger();
+	
 
 	@Override
 	public List<OrderLine> readAll() {
@@ -126,7 +128,39 @@ public class OrderLineDAO implements Dao<OrderLine>{
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
 			
-			return statement.executeUpdate("delete from orderline where orderline_id = " + id);
+			return statement.executeUpdate("delete from orderline where orderline_id = " + id + ";");
+			
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+			
+		}
+		return 0;
+	}
+	
+	public int deleteProduct(long id) {
+
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();) {
+			
+			return statement.executeUpdate("delete from orderline where product_id = " + id);
+			
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+			
+		}
+		return 0;
+	}
+	
+	public int deleteOrder(long id) {
+
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();) {
+			
+			return statement.executeUpdate("delete from orderline where order_id = " + id);
 			
 		} catch (Exception e) {
 			
@@ -147,16 +181,33 @@ public class OrderLineDAO implements Dao<OrderLine>{
 		return new OrderLine(orderLineID, orderID, productID, quantity);
 	}
 	
+	public OrderLineAndProduct newModelFromResultSet(ResultSet resultSet) throws SQLException {
+		Long orderLineID = resultSet.getLong("orderline_id");
+		String productName = resultSet.getString("product_name");
+		int quantity = resultSet.getInt("product_quantity");
+		Double price = resultSet.getDouble("price");
+		
+		return new OrderLineAndProduct(orderLineID, productName, quantity, price);
+	}
 	
-	public ResultSet allOrderLinesByOrder(Long id) {
+	public List<OrderLineAndProduct> allOrderLinesByOrder(Long id) {
+		
+
 		
 		try (Connection connection = DBUtils.getInstance().getConnection();
 			 Statement statement = connection.createStatement();
 			 ResultSet resultSet = statement.executeQuery("SELECT orderline_id, product_name, product_quantity, price FROM orderline join products on "
 						+ "orderline.product_id = products.product_id where order_id = " + id);) {
 			
-			resultSet.next();
-			return resultSet;
+			List<OrderLineAndProduct> list = new ArrayList<>();
+			
+			while(resultSet.next()) {
+			
+				list.add(newModelFromResultSet(resultSet));
+			
+			}
+			
+			return list;
 			
 		} catch (Exception e) {
 			
@@ -164,18 +215,19 @@ public class OrderLineDAO implements Dao<OrderLine>{
 			LOGGER.error(e.getMessage());
 			
 		}
-		return null;
+		return new ArrayList<>();
 	}
 	
-	public float updateTotalPriceUpdate(Long orderID) {
+	public Double updateTotalPriceUpdate(Long orderID) {
 		
 		
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				 Statement statement = connection.createStatement();
-				 ResultSet resultSet = statement.executeQuery("SELECT SUM(product_quantity*price) AS orderline_price FROM orderline JOIN products on "
+				 ResultSet resultSet = statement.executeQuery("SELECT SUM(product_quantity*price) AS orderline_total FROM orderline JOIN products on "
 				 		+ "orderline.product_id = products.product_id WHERE order_id = "+ orderID);){
 			
-			return resultSet.getFloat(1);
+			resultSet.next();
+			return resultSet.getDouble("orderline_total");
 			
 			
 		} catch (Exception e) {
@@ -184,7 +236,7 @@ public class OrderLineDAO implements Dao<OrderLine>{
 			LOGGER.error(e.getMessage());
 			
 		}
-		return 0;
+		return 0D;
 		
 	}
 	

@@ -108,8 +108,8 @@ public class Customer {
 	@Override
 	public String toString() {
 		
-		return "Customer [id=" + id + ", firstName=" + firstName + ", surname=" + surname + ", age=" + age + ", email="
-				+ email + ", address=" + address + ", postcode=" + postcode + ", password=" + password + "]";
+		return "Customer: Customer ID = " + id + ", First name = " + firstName + ", Surname = " + surname + ", Age = " + age + ", Email = "
+				+ email + ", Password = " + password + ", Address = " + address + ", Postcode = " + postcode;
 		
 	}
 

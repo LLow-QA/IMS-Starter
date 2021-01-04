@@ -1,9 +1,7 @@
-//ARE YOU ON A FEATURE BRANCH
-
 package com.qa.ims.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
+import java.sql.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,17 +14,15 @@ import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.utils.Utils;
 
 public class OrderController implements CrudController<Order> {
-	
+
 	public static final Logger LOGGER = LogManager.getLogger();
 	
-	CustomerDAO customerDAO = new CustomerDAO();
-	OrderLineDAO orderLineDAO = new OrderLineDAO();
+	private CustomerDAO customerDAO = new CustomerDAO();
+	private OrderLineDAO orderLineDAO = new OrderLineDAO();
 	
+	private OrderLineSubController ordSub = new OrderLineSubController();
 	private OrderDAO orderDAO;
 	private Utils utils;
-	
-	CustomerController customerController = new CustomerController(customerDAO, utils);
-	OrderLineController orderLineController = new OrderLineController(orderLineDAO, utils);
 	
 	
 	public OrderController(OrderDAO orderDAO, Utils utils) {
@@ -38,124 +34,154 @@ public class OrderController implements CrudController<Order> {
 
 	@Override
 	public List<Order> readAll() {
-		List<Order> orders = orderDAO.readAll();
-		for (Order order : orders) {
-			LOGGER.info(order.toString());
+		
+		LOGGER.info("Do you want to see all order baskets associated with each order as well? (y/n)");
+		boolean decision = utils.getBool();
+		
+		if (decision) {
+			
+			List<Order> orders = orderDAO.readAll();
+			
+			for (Order order : orders) {
+				
+				Long ID = order.getOrderID();
+				LOGGER.info(order.toString());
+				ordSub.readAllOrderLines(ID);
+				
+				}
+			
+			return orders;
+			
+		} else {
+		
+			LOGGER.info("Displaying orders only.");
+			List<Order> orders = orderDAO.readAll();
+			for (Order order : orders) {
+				LOGGER.info(order.toString());
+				
+			}
+			
+			return orders;
+			
 		}
-		return orders;
 	}
 
 	@Override
 	public Order create() {
 		
 		boolean more = true;
-		List<Long> orderLineIDs = new ArrayList<Long>();
+	
+		Long customerID = emailCheck();
+		 
+		if (customerID == null) {
+			
+			return null;
+			
+		}else {
 		
-		LOGGER.info("Please enter your email: ");
-		String email = utils.getString();
-		if(customerDAO.returningCustomer(email)) {
-			
-			Long customerID = customerDAO.returningCustomerID(email);
-			
-			
-			long millis=System.currentTimeMillis();  
-			java.sql.Date date=new java.sql.Date(millis);  
-			Date orderDate = date;  
+			LocalDate date = LocalDate.now();
+			Date orderDate = Date.valueOf(date); 
 			
 			double total = 0;
 			
 			orderDAO.create(new Order(customerID,orderDate,total));
+			Long orderID = orderDAO.readLatest().getOrderID();
 			
 			while (more) {
 				
-			orderLineController.create();
-			LOGGER.info("Would you like to add more items to you order? (y/n)");
-			more = utils.getBool();
-			orderLineIDs.add(orderLineDAO.readLatest().getOrderLineID());
-			}
+				ordSub.createOrderLine(orderID);
+				LOGGER.info("Would you like to add more items to you order? (y/n)");
+				more = utils.getBool();
 			
-			for (int i = 0; i < orderLineIDs.size();i++) {
-				
-				total = total + (orderLineDAO.readOrderLine(orderLineIDs.get(i)).getQuantity())*
-								(orderLineController.productPrice(orderLineDAO.readOrderLine(orderLineIDs.get(i)).getProductID()));
-							
-			}
-			
-			orderLineIDs.clear();
-			
-			LOGGER.info("Order created");
-			return orderDAO.updateTotalPriceCreate(total);
-			
-		} else {
-			LOGGER.info("It appears that you dont have an account registered to this email." + '\n' + 
-					"Would you like to create an account (y/n)?");
-			boolean decision = utils.getBool();
-					
-			if (decision) {
-				customerController.create();
-				create();
-			} else {
-				LOGGER.info("Please try again.");
-				create();
-			}
 		}
-		return null;
+		
+		
+		Order orders = orderDAO.updateTotalPriceCreate(orderID);
+		LOGGER.info("Order created");
+		return orders;
+		//END
+		
+	} 
 		
 	}
 
 	@Override
 	public Order update() {
 		
-		float total = 0;
+		Double total = 0D;
 		
-		LOGGER.info("Please enter your email address: ");
-		String email = utils.getString();
-		
-		if(customerDAO.returningCustomer(email)) {
+			Long customerID = emailCheck();
 			
-			Long customerID = customerDAO.returningCustomerID(email);
+			if (customerID == null) {
+				return null;
+				
+			}else {
 			
-			orderDAO.allOrdersByCust(customerID);
+			orderDAO.readOrdersByCustomer(customerID);
+			
 			LOGGER.info("please enter the order ID that you would like to update: ");
-			Long orderID = orderLineController.update().getOrderID();
 			
-			long millis=System.currentTimeMillis();  
-			java.sql.Date date=new java.sql.Date(millis);  
-			Date orderDate = date;  
+			Long orderID = ordSub.updateOrderLine(customerID);
+			
+			LocalDate date = LocalDate.now();
+			Date orderDate = Date.valueOf(date); 
 			
 			total = orderLineDAO.updateTotalPriceUpdate(orderID);
 			
 			Order order = orderDAO.update(new Order(orderID,customerID,orderDate,total));
 			return order;
 			
-		} else {
-			
-			LOGGER.info("It appears that you dont have an account registered to this email." + '\n' + 
-						"Would you like to create an account (y/n)?");
-			boolean decision = utils.getBool();
-					
-			if (decision) {
-				
-				customerController.create();
-				LOGGER.info("You have to create an order to be able to update it!" + '\n' +
-							"Sending you to create an order.");
-				create();
-				
-			} else {
-				
-				LOGGER.info("Please try again.");
-				update();
 			}
-		}
-		return null;
 	}
 
 	@Override
 	public int delete() {
 		
 		LOGGER.info("Please enter the id of the order you would like to delete: ");
-		Long id = utils.getLong();
-		return orderDAO.delete(id);
+		Long orderID = utils.getLong();
+		
+		LOGGER.info("Do you want to delete all items from the order? (y/n)");
+		boolean decision = utils.getBool();
+		
+		if (decision) {
+			
+			return orderDAO.delete(orderID);
+			
+		}else {
+			
+			return ordSub.deleteOrderLine(orderID);	
+		}
 	}
-
+	
+	//
+	public Long emailCheck() {
+		
+		LOGGER.info("Please enter your email address: ");
+		String email = utils.getString();
+		
+		if(customerDAO.returningCustomer(email)) {
+			
+			return customerDAO.returningCustomerID(email);
+			
+		}else {
+			
+			LOGGER.info("It appears that you dont have an account registered to this email." + '\n' + 
+					"Would you like to create an account (y/n)?");
+			boolean decision = utils.getBool();
+					
+			if (decision) {
+				
+				LOGGER.info("Please type 'RETURN' then select 'CUSTOMER' then 'CREATE' to register an account." + '\n');
+				return null;
+				
+			} else {
+				
+				LOGGER.info("Please try again.");
+				return null;
+				
+			}
+		}
+		
+	}
+	
 }
