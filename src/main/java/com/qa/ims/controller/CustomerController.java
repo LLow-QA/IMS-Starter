@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.persistence.dao.CustomerDAO;
 import com.qa.ims.persistence.domain.Customer;
+import com.qa.ims.persistence.domain.Domain;
 import com.qa.ims.utils.Utils;
 
 /**
@@ -20,14 +21,14 @@ public class CustomerController implements CrudController<Customer> {
 	public static final Logger LOGGER = LogManager.getLogger();
 
 	private CustomerDAO customerDAO;
-	private Utils utils;
+	private Utils utils;	
 
 	public CustomerController(CustomerDAO customerDAO, Utils utils) {
 		
 		super();
 		this.customerDAO = customerDAO;
 		this.utils = utils;
-		
+		 
 	}
 
 	/**
@@ -124,7 +125,8 @@ public class CustomerController implements CrudController<Customer> {
 		
 		LOGGER.info("Please enter the id of the customer you would like to delete: ");
 		Long id = utils.getLong();
-		return customerDAO.delete(id); //use cascade
+		
+		return customerDAO.delete(id);
 		
 	}
 

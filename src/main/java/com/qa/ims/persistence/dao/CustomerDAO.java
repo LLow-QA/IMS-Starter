@@ -16,6 +16,9 @@ import com.qa.ims.persistence.domain.Customer;
 import com.qa.ims.utils.DBUtils;
 
 public class CustomerDAO implements Dao<Customer> {
+	
+	private OrderDAO orderDAO = new OrderDAO();
+	private OrderLineDAO orderLineDAO = new OrderLineDAO();
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -165,17 +168,34 @@ public class CustomerDAO implements Dao<Customer> {
 	@Override
 	public int delete(long id) {
 		
-		try (Connection connection = DBUtils.getInstance().getConnection();
-				Statement statement = connection.createStatement();) {
+		if (orderLineDAO.deleteOrder(id) == 1) {
+		
+			if (orderDAO.deleteCustomer(id) == 1) {
+				
+				try (Connection connection = DBUtils.getInstance().getConnection();
+						Statement statement = connection.createStatement();) {
+					
+		
+					return statement.executeUpdate("delete from customers where customer_id = " + id);
+					
+				} catch (Exception e) {
+					
+					LOGGER.debug(e);
+					LOGGER.error(e.getMessage());
+					
+				}
+				
+			}else {
+				
+				return -1;
+				
+			}
+		}else {
 			
-			return statement.executeUpdate("delete from customers where customer_id = " + id);
-			
-		} catch (Exception e) {
-			
-			LOGGER.debug(e);
-			LOGGER.error(e.getMessage());
+			return -2;
 			
 		}
+		
 		return 0;
 	}
 	
@@ -183,7 +203,7 @@ public class CustomerDAO implements Dao<Customer> {
 		
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery("SELECT  email FROM customers");) {
+				ResultSet resultSet = statement.executeQuery("SELECT email FROM customers");) {
 			
 			while(resultSet.next()) {
 				String mail = resultSet.getString("email");
@@ -208,7 +228,7 @@ public class CustomerDAO implements Dao<Customer> {
 		
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery("SELECT  customer_id FROM customers WHERE email = '" + email + "'");) {
+				ResultSet resultSet = statement.executeQuery("SELECT customer_id FROM customers WHERE email = '" + email + "'");) {
 			
 			resultSet.next();
 			Long id = resultSet.getLong("customer_id");

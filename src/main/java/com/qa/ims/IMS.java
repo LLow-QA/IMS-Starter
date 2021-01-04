@@ -12,6 +12,7 @@ import com.qa.ims.controller.OrderController;
 import com.qa.ims.controller.ProductController;
 import com.qa.ims.persistence.dao.CustomerDAO;
 import com.qa.ims.persistence.dao.OrderDAO;
+import com.qa.ims.persistence.dao.OrderLineDAO;
 import com.qa.ims.persistence.dao.ProductDAO;
 import com.qa.ims.persistence.domain.Domain;
 import com.qa.ims.utils.DBUtils;
@@ -38,6 +39,7 @@ public class IMS {
 		
 		final ProductDAO prodDAO = new ProductDAO();
 		this.products = new ProductController(prodDAO, utils);
+		
 	}
 
 	public void imsSystem() {
@@ -48,6 +50,7 @@ public class IMS {
 
 		DBUtils.connect(username, password);
 		Domain domain = null;
+
 		do {
 			LOGGER.info("Which entity would you like to use?");
 			Domain.printDomains();

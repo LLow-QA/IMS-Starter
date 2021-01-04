@@ -18,6 +18,8 @@ import com.qa.ims.utils.DBUtils;
 
 public class ProductDAO implements Dao<Product> {
 
+	private OrderLineDAO orderLineDAO = new OrderLineDAO();
+	
 	public static final Logger LOGGER = LogManager.getLogger();
 
 	
@@ -51,9 +53,9 @@ public class ProductDAO implements Dao<Product> {
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
 			
-			statement.executeUpdate("INSERT INTO product(product_name, product_desc, price, stock)"
+			statement.executeUpdate("INSERT INTO products(product_name, product_desc, price, stock)"
 					+ " values('" + product.getName()+ "','" 
-					+ product.getDescription() + "'," + product.getPrice()+ ",'"
+					+ product.getDescription() + "'," + product.getPrice()+ ","
 					+ product.getStock()+ ");");
 			
 			return readLatest();
@@ -93,7 +95,7 @@ public class ProductDAO implements Dao<Product> {
 			
 			statement.executeUpdate("update products set product_name = '" + product.getName() + "', product_desc = '"
 					+ product.getDescription() + "', price = " + product.getPrice() + ", stock = "
-					+ product.getStock() + ");");
+					+ product.getStock());
 			
 			return readProduct(product.getId());
 			
@@ -108,16 +110,22 @@ public class ProductDAO implements Dao<Product> {
 
 	@Override
 	public int delete(long id) {
+		
+		if (orderLineDAO.deleteProduct(id) == 1) {
+		
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
 			
-			return statement.executeUpdate("delete from products where product_id = " + id);
+			return statement.executeUpdate("delete from products where product_id = " + id + ";");
 			
 		} catch (Exception e) {
 			
 			LOGGER.debug(e);
 			LOGGER.error(e.getMessage());
 			
+		}
+		}else {
+		return -1;
 		}
 		return 0;
 	}
@@ -158,9 +166,11 @@ public class ProductDAO implements Dao<Product> {
 				 Statement statement = connection.createStatement();
 				 ResultSet resultSet = statement.executeQuery("SELECT product_id FROM products WHERE product_name = '" + name +"'");) {
 				
-				resultSet.next();
+				if(resultSet.next()) {
 				return resultSet.getLong("product_id");
-				
+				}else {
+					return null;
+				}
 			} catch (Exception e) {
 				
 				LOGGER.debug(e);
@@ -169,6 +179,14 @@ public class ProductDAO implements Dao<Product> {
 			}
 		return null;
 	}
-
-
+	
+	public List<Product> listToString() {
+		
+		List<Product> products = readAll();
+		for (Product product : products) {
+			
+			LOGGER.info(product.toString());
+		}
+		return products;
+	}
 }
