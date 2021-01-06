@@ -125,23 +125,18 @@ public class OrderDAO implements Dao<Order>{
 	@Override
 	public int delete(long id) {
 		
-		if(orderLineDAO.deleteOrder(id) == 1) {
+		orderLineDAO.deleteOrder(id);
 			
-			try (Connection connection = DBUtils.getInstance().getConnection();
-					Statement statement = connection.createStatement();) {
-				
-				return statement.executeUpdate("delete from orders where order_id = " + id);
-				
-			} catch (Exception e) {
-				
-				LOGGER.debug(e);
-				LOGGER.error(e.getMessage());
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();) {
 			
-			}
+			return statement.executeUpdate("delete from orders where order_id = " + id);
 			
-		}else {
+		} catch (Exception e) {
 			
-			return -1;
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+		
 		}
 		
 		return 0;
@@ -153,8 +148,8 @@ public class OrderDAO implements Dao<Order>{
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
 			
-			return statement.executeUpdate("delete from orders where customer_id = " + id + ";");
-			
+			statement.executeUpdate("delete from orders where customer_id = " + id + ";");
+			return 1;
 		} catch (Exception e) {
 			
 			LOGGER.debug(e);

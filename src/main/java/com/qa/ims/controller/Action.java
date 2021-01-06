@@ -57,15 +57,4 @@ public enum Action {
 		return action;
 	}
 	
-	public static Action switchAction(String string) {
-		Action action = null;
-		do {
-			try {
-				action = Action.valueOf(string.toUpperCase());
-			} catch (IllegalArgumentException e) {
-				LOGGER.error("Invalid selection please try again");
-			}
-		} while (action == null);
-		return action;
-	}
 }

@@ -77,7 +77,7 @@ public class OrderControllerTest {
 	@Test
 	public void testCreate() {
 		
-		final String EMAIL = "lafga@ufgs.net";
+		final String EMAIL = "ll@qa.com";
 		final Long customerID = 1L, orderID = 1L;
 		final double halfwayTotal = 0;
 		final Order halfOrder = new Order(customerID,orderDate,halfwayTotal);
@@ -176,8 +176,12 @@ public class OrderControllerTest {
 	@Test
 	public void testDeleteWholeOrder() {
 		
-		final long ID = 1L;
+		final String EMAIL = "ll@qa.com";
+		final long ID = 1L, customerID = 1L;
 
+		Mockito.when(utils.getString()).thenReturn(EMAIL);
+		Mockito.when(customerDAO.returningCustomer(EMAIL)).thenReturn(true);
+		Mockito.when(customerDAO.returningCustomerID(EMAIL)).thenReturn(customerID);
 		Mockito.when(utils.getLong()).thenReturn(ID);
 		Mockito.when(utils.getBool()).thenReturn(true);
 		Mockito.when(orderDAO.delete(ID)).thenReturn(1);
@@ -194,8 +198,12 @@ public class OrderControllerTest {
 	@Test
 	public void testDeleteOrderLine() {
 		
-		final long ID = 1L;
+		final String EMAIL = "ll@qa.com";
+		final long ID = 1L, customerID = 1L;
 
+		Mockito.when(utils.getString()).thenReturn(EMAIL);
+		Mockito.when(customerDAO.returningCustomer(EMAIL)).thenReturn(true);
+		Mockito.when(customerDAO.returningCustomerID(EMAIL)).thenReturn(customerID);
 		Mockito.when(utils.getLong()).thenReturn(ID);
 		Mockito.when(utils.getBool()).thenReturn(false);
 		Mockito.when(ordSub.deleteOrderLine(ID)).thenReturn(1);
@@ -212,7 +220,7 @@ public class OrderControllerTest {
 	@Test
 	public void testUpdate() {
 		
-		final String EMAIL = "lafga@ufgs.net";
+		final String EMAIL = "ll@qa.com";
 		final Long customerID = 1L , orderID = 1L;
 		final Date dateOfOrder = Date.valueOf("2020-12-23");
 		

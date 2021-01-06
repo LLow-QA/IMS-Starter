@@ -16,9 +16,11 @@ import org.apache.logging.log4j.Logger;
 import com.qa.ims.persistence.domain.Product;
 import com.qa.ims.utils.DBUtils;
 
+
 public class ProductDAO implements Dao<Product> {
 
 	private OrderLineDAO orderLineDAO = new OrderLineDAO();
+	
 	
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -95,7 +97,7 @@ public class ProductDAO implements Dao<Product> {
 			
 			statement.executeUpdate("update products set product_name = '" + product.getName() + "', product_desc = '"
 					+ product.getDescription() + "', price = " + product.getPrice() + ", stock = "
-					+ product.getStock());
+					+ product.getStock() + ";");
 			
 			return readProduct(product.getId());
 			
@@ -111,7 +113,7 @@ public class ProductDAO implements Dao<Product> {
 	@Override
 	public int delete(long id) {
 		
-		if (orderLineDAO.deleteProduct(id) == 1) {
+		orderLineDAO.deleteProduct(id);
 		
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
@@ -124,9 +126,7 @@ public class ProductDAO implements Dao<Product> {
 			LOGGER.error(e.getMessage());
 			
 		}
-		}else {
-		return -1;
-		}
+
 		return 0;
 	}
 
@@ -188,5 +188,64 @@ public class ProductDAO implements Dao<Product> {
 			LOGGER.info(product.toString());
 		}
 		return products;
+	}
+	
+	public Integer stockCheck(Long prodID, int quantityPurchased) {
+		
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();) {
+			
+		int totalStock = readProduct(prodID).getStock();
+		
+		int newTotal = totalStock - quantityPurchased;
+		
+		if(newTotal >= 0) {
+				
+				statement.executeUpdate("update products set stock = "
+						+ newTotal + " WHERE product_id = '"+ prodID + "';");
+			
+				return newTotal;
+				
+		}else {
+			
+			return newTotal;
+			
+		}
+		
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+			
+		}
+			
+	return null;
+		
+	}
+	
+	public Integer removeStockFromOrder(Long orderLineID) {
+		
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();) {
+			
+			Long productID = orderLineDAO.readOrderLine(orderLineID).getProductID();
+			int oldOrderQuant = orderLineDAO.readOrderLine(orderLineID).getQuantity();
+			
+			orderLineDAO.setOrderLineQuantToZero(orderLineID);
+			
+			
+			int oldStockQuant = readProduct(productID).getStock();
+			int newStockQuant = oldStockQuant + oldOrderQuant;
+
+			statement.executeUpdate("update products set stock = " + newStockQuant + " WHERE product_id = '" + productID + "';");
+			return newStockQuant;
+		
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+			
+		}
+		return null;
 	}
 }

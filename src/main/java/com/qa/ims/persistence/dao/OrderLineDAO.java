@@ -144,8 +144,8 @@ public class OrderLineDAO implements Dao<OrderLine>{
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
 			
-			return statement.executeUpdate("delete from orderline where product_id = " + id);
-			
+			statement.executeUpdate("delete from orderline where product_id = " + id);
+			return 1;
 		} catch (Exception e) {
 			
 			LOGGER.debug(e);
@@ -160,8 +160,8 @@ public class OrderLineDAO implements Dao<OrderLine>{
 		try (Connection connection = DBUtils.getInstance().getConnection();
 				Statement statement = connection.createStatement();) {
 			
-			return statement.executeUpdate("delete from orderline where order_id = " + id);
-			
+			statement.executeUpdate("delete from orderline where order_id = " + id);
+			return 1;
 		} catch (Exception e) {
 			
 			LOGGER.debug(e);
@@ -215,7 +215,28 @@ public class OrderLineDAO implements Dao<OrderLine>{
 			LOGGER.error(e.getMessage());
 			
 		}
+		
 		return new ArrayList<>();
+		
+	}
+	
+	public OrderLineAndProduct readOrderLineAndProduct(Long id) {
+		
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("SELECT orderline_id, product_name, product_quantity, price FROM orderline join products on "
+						+ "orderline.product_id = products.product_id where orderline_id = " + id);) {
+			
+			resultSet.next();
+			return newModelFromResultSet(resultSet);
+			
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+			
+		}
+		return null;
 	}
 	
 	public Double updateTotalPriceUpdate(Long orderID) {
@@ -238,6 +259,25 @@ public class OrderLineDAO implements Dao<OrderLine>{
 		}
 		return 0D;
 		
+	}
+	
+	public Integer setOrderLineQuantToZero(Long orderLineID) {
+		
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();) {
+			
+
+			statement.executeUpdate("update orderline set product_quantity = " + 0 + " WHERE orderLine_id = '" + orderLineID + "';");
+			
+			return 0;
+		
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
+			
+		}
+		return null;
 	}
 	
 }

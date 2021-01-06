@@ -20,7 +20,7 @@ public class OrderLineSubController {
 	private OrderLineDAO orderLineDAO = new OrderLineDAO();
 	private ProductDAO productDAO = new ProductDAO();
 	private OrderDAO orderDAO = new OrderDAO();
-	
+
 
 	public List<OrderLineAndProduct> readAllOrderLines(Long orderID) {
 		
@@ -38,7 +38,6 @@ public class OrderLineSubController {
 
 		Long orderID = ID;
 		
-		
 		productDAO.listToString();
 		
 		LOGGER.info('\n' + "Which product would you like to order?");
@@ -54,10 +53,37 @@ public class OrderLineSubController {
 		
 			LOGGER.info("How many would you like the purchase?");
 			int quant = utils.getInt();
+			
+			int stockTotal = productDAO.stockCheck(productID, quant);
+			if (stockTotal < 0 ) {
+				
+				int availableStock = productDAO.readProduct(productID).getStock();
+				LOGGER.info("Error - Only " + availableStock + " items were added as that is all we have in stock. \n "
+						+ "Would you still like to proceed? (y/n)");
+				boolean decision = utils.getBool();
+				
+				if (decision) {
+					
+					productDAO.stockCheck(productID, availableStock);
+					OrderLine orderLine = orderLineDAO.create(new OrderLine(orderID, productID, availableStock));
+					return orderLine;
+					
+				}else {
+					
+					createOrderLine(ID);
+					
+				}
+				
+			}else {
+			
 			OrderLine orderLine = orderLineDAO.create(new OrderLine(orderID, productID, quant));
 			return orderLine;
+			}
+			
 		}
+		
 		return null;
+		
 	}
 
 
@@ -67,7 +93,6 @@ public class OrderLineSubController {
 		boolean correct = false;
 		Long orderLineID = null;
 		Long productID = null;
-		OrderLine orderLine = null;
 		
 		//choosing which order the customer wants to update
 		Long orderChoice = utils.getLong();
@@ -77,14 +102,14 @@ public class OrderLineSubController {
 			LOGGER.info("Please enter a valid ID.");
 			updateOrderLine(custID);
 			
-		}else {int x = 0;}
+		}else {}
 		
 		Long orderID = orderChoice;
 		
 		//choosing which orderline the customer wants to update
 		while(more) {
 			
-			LOGGER.info(readAllOrderLines(orderID));
+			readAllOrderLines(orderID);
 			
 				do {
 				
@@ -99,12 +124,15 @@ public class OrderLineSubController {
 					
 				}while(!correct);
 				
+				productDAO.removeStockFromOrder(orderLineID);
+				
 				correct = false;
 				
 				do {
 					
 					// Checking that the product name that is entered exists.
-					LOGGER.info("Which product to you want to update/change: ");
+					productDAO.listToString();
+					LOGGER.info("Please update which product to would you like to order: ");
 					String productName = utils.getString();
 					productID = productDAO.returnProductID(productName);
 					
@@ -119,9 +147,30 @@ public class OrderLineSubController {
 			LOGGER.info("Please update the order quantity: ");
 			int quant = utils.getInt();
 			
-			orderLine = orderLineDAO.update(new OrderLine(orderLineID,orderID,productID,quant));
+			int stockTotal = productDAO.stockCheck(productID, quant);
+			if (stockTotal < 0 ) {
+				
+				int availableStock = productDAO.readProduct(productID).getStock();
+				LOGGER.info("Error - Only " + availableStock + " items were added as that is all we have in stock. \n "
+						+ "Would you still like to proceed? (y/n)");
+				boolean decision = utils.getBool();
+				
+				if (decision) {
+					
+					productDAO.stockCheck(productID, availableStock);
+					orderLineDAO.update(new OrderLine(orderLineID,orderID,productID,availableStock));
+					
+				}else {
+					
+					updateOrderLine(custID);
+					
+				}
+			}else {
+				
+				orderLineDAO.update(new OrderLine(orderLineID,orderID,productID,quant));
 			
-			LOGGER.info(orderLine);
+			}
+			LOGGER.info(orderLineDAO.readOrderLineAndProduct(orderLineID));
 			
 			
 			LOGGER.info("Do you want to make any more updates? y/n");
@@ -138,7 +187,7 @@ public class OrderLineSubController {
 
 	public int deleteOrderLine(Long orderID) {
 		
-		LOGGER.info(readAllOrderLines(orderID));
+		readAllOrderLines(orderID);
 		LOGGER.info("Please enter the id of the orderline you would like to delete: ");
 		Long id = utils.getLong();
 		
