@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.persistence.dao.CustomerDAO;
 import com.qa.ims.persistence.domain.Customer;
-import com.qa.ims.persistence.domain.Domain;
 import com.qa.ims.utils.Utils;
 
 /**
@@ -74,7 +73,9 @@ public class CustomerController implements CrudController<Customer> {
 		String postcode = utils.getString();
 		
 		Customer customer = customerDAO.create(new Customer(firstName, surname, age, email, password, address, postcode));
+
 		LOGGER.info("Customer created.");
+			
 		return customer;
 		
 	}
@@ -110,7 +111,9 @@ public class CustomerController implements CrudController<Customer> {
 		String postcode = utils.getString();
 		
 		Customer customer = customerDAO.update(new Customer(id, firstName, surname, age, email, password, address, postcode));
-		LOGGER.info("Customer Updated");
+		
+		LOGGER.info("Customer updated.");
+	
 		return customer;
 		
 	}
@@ -126,6 +129,7 @@ public class CustomerController implements CrudController<Customer> {
 		LOGGER.info("Please enter the id of the customer you would like to delete: ");
 		Long id = utils.getLong();
 		
+		LOGGER.info("Customer deleted.");
 		return customerDAO.delete(id);
 		
 	}

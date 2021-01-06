@@ -137,6 +137,7 @@ public class OrderController implements CrudController<Order> {
 	@Override
 	public int delete() {
 		
+		orderDAO.readOrdersByCustomer(emailCheck());
 		LOGGER.info("Please enter the id of the order you would like to delete: ");
 		Long orderID = utils.getLong();
 		

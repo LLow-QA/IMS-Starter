@@ -101,6 +101,7 @@ public class CustomerDAO implements Dao<Customer> {
 					+ customer.getEmail()+ "','"  + customer.getPassword()+ "','" +
 					 customer.getAddress()+ "','" + customer.getPostcode()+   "');");
 			
+			
 			return readLatest();
 			
 		} catch (Exception e) {
@@ -168,35 +169,23 @@ public class CustomerDAO implements Dao<Customer> {
 	@Override
 	public int delete(long id) {
 		
-		if (orderLineDAO.deleteOrder(id) == 1) {
-		
-			if (orderDAO.deleteCustomer(id) == 1) {
+		orderLineDAO.deleteOrder(id);
+		orderDAO.deleteCustomer(id);
 				
-				try (Connection connection = DBUtils.getInstance().getConnection();
-						Statement statement = connection.createStatement();) {
-					
-		
-					return statement.executeUpdate("delete from customers where customer_id = " + id);
-					
-				} catch (Exception e) {
-					
-					LOGGER.debug(e);
-					LOGGER.error(e.getMessage());
-					
-				}
-				
-			}else {
-				
-				return -1;
-				
-			}
-		}else {
+		try (Connection connection = DBUtils.getInstance().getConnection();
+				Statement statement = connection.createStatement();) {
 			
-			return -2;
+			return statement.executeUpdate("delete from customers where customer_id = " + id);
+			
+		} catch (Exception e) {
+			
+			LOGGER.debug(e);
+			LOGGER.error(e.getMessage());
 			
 		}
 		
 		return 0;
+		
 	}
 	
 	public boolean returningCustomer(String email) {

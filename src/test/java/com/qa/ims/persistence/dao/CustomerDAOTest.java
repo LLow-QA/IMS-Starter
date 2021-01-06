@@ -28,17 +28,22 @@ public class CustomerDAOTest {
 	@Before
 	public void setup() {
 		DBUtils.getInstance().init("src/test/resources/sql-schema.sql", "src/test/resources/sql-data.sql");
+		
+		DAO.create(new Customer("James","Pierson",29,"jp@gmail.com","Morg123","23 Word Street","SD23 3GH"));
+		DAO.create(new Customer("Hannah","Wardwell",65,"hwe@gmail.com","Matgag3","12 Faor Loop","PE13 5RH"));
+		DAO.create(new Customer("Andre","Harlow",40,"igas.43@aol.com","grafac5","1A Lawn Road","DO03 9KF"));
+		
 	}
 
 	@Test
 	public void testCreate() {
-		final Customer created = new Customer(2L, "chris", "perrins",72,"reach@ufgs.net", "g", "343 red", "DC3 4rd");
+		final Customer created = new Customer(5L, "chris", "perrins",72,"reach@ufgs.net", "g", "343 red", "DC3 4rd");
 		assertEquals(created, DAO.create(created));
 	}
 
 	@Test
 	public void testReturningCustomerID() {
-		final String email = "lafga@ufgs.net";
+		final String email = "ll@qa.com";
 		final Long id = 1L;
 		assertEquals(id,DAO.returningCustomerID(email));
 	}
@@ -46,19 +51,23 @@ public class CustomerDAOTest {
 	@Test
 	public void testReadAll() {
 		List<Customer> expected = new ArrayList<>();
-		expected.add(new Customer(1L, "jordan", "harrison",22,"lafga@ufgs.net", "dgsfhaf8g", "343 fasd sf", "DC3 4rd"));
+		expected.add(new Customer(1L, "jordan", "harrison",22,"ll@qa.com", "dgsfhaf8g", "343 fasd sf", "DC3 4rd"));
+		expected.add(new Customer(2L,"James","Pierson",29,"jp@gmail.com","Morg123","23 Word Street","SD23 3GH"));
+		expected.add(new Customer(3L,"Hannah","Wardwell",65,"hwe@gmail.com","Matgag3","12 Faor Loop","PE13 5RH"));
+		expected.add(new Customer(4L,"Andre","Harlow",40,"igas.43@aol.com","grafac5","1A Lawn Road","DO03 9KF"));
+		
 		assertEquals(expected, DAO.readAll());
 	}
 
 	@Test
 	public void testReadLatest() {
-		assertEquals(new Customer(1L, "jordan", "harrison",22,"lafga@ufgs.net", "dgsfhaf8g", "343 fasd sf", "DC3 4rd"), DAO.readLatest());
+		assertEquals(new Customer(4L,"Andre","Harlow",40,"igas.43@aol.com","grafac5","1A Lawn Road","DO03 9KF"), DAO.readLatest());
 	}
 
 	@Test
 	public void testRead() {
 		final long ID = 1L;
-		assertEquals(new Customer(ID, "jordan", "harrison",22,"lafga@ufgs.net", "dgsfhaf8g", "343 fasd sf", "DC3 4rd"), DAO.readCustomer(ID));
+		assertEquals(new Customer(ID, "jordan", "harrison",22,"ll@qa.com", "dgsfhaf8g", "343 fasd sf", "DC3 4rd"), DAO.readCustomer(ID));
 	}
 
 	@Test
@@ -76,7 +85,7 @@ public class CustomerDAOTest {
 	
 	@Test
 	public void testReturningCustomers() {
-		final String email = "lafga@ufgs.net";
+		final String email = "ll@qa.com";
 		assertTrue(DAO.returningCustomer(email));
 	}	
 	

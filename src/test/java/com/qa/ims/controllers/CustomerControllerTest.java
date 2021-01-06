@@ -50,7 +50,7 @@ public class CustomerControllerTest {
 	@Test
 	public void testReadAll() {
 		List<Customer> customers = new ArrayList<>();
-		customers.add(new Customer(1L, "jordan", "harrison",22,"lafga@ufgs.net", "dgsfhaf8g", "343 fasd sf", "DC3 4rd"));
+		customers.add(new Customer(1L, "jordan", "harrison",22,"ll@qa.com", "dgsfhaf8g", "343 fasd sf", "DC3 4rd"));
 
 		Mockito.when(dao.readAll()).thenReturn(customers);
 

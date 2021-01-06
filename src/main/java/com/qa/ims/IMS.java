@@ -12,7 +12,6 @@ import com.qa.ims.controller.OrderController;
 import com.qa.ims.controller.ProductController;
 import com.qa.ims.persistence.dao.CustomerDAO;
 import com.qa.ims.persistence.dao.OrderDAO;
-import com.qa.ims.persistence.dao.OrderLineDAO;
 import com.qa.ims.persistence.dao.ProductDAO;
 import com.qa.ims.persistence.domain.Domain;
 import com.qa.ims.utils.DBUtils;
@@ -90,6 +89,7 @@ public class IMS {
 		} while (domain != Domain.STOP);
 	}
 
+
 	public void doAction(CrudController<?> crudController, Action action) {
 		switch (action) {
 		case CREATE:
@@ -111,4 +111,16 @@ public class IMS {
 		}
 	}
 
+	public IMS(CustomerController customers, OrderController orders, ProductController products, Utils utils) {
+		super();
+		this.customers = customers;
+		this.orders = orders;
+		this.products = products;
+		this.utils = utils;
+	}
+
+
+
+	
+	
 }

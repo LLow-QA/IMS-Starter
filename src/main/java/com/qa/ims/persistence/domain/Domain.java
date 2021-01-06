@@ -40,17 +40,4 @@ public enum Domain {
 		}
 		return domain;
 	}
-	
-	public static Domain switchDomain(String string) {
-		Domain domain;
-		while (true) {
-			try {
-				domain = Domain.valueOf(string.toUpperCase());
-				break;
-			} catch (IllegalArgumentException e) {
-				LOGGER.error("Invalid selection please try again");
-			}
-		}
-		return domain;
-	}
 }

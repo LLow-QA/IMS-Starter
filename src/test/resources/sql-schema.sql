@@ -18,8 +18,7 @@ CREATE TABLE IF NOT EXISTS `store_db`.`products` (
   `product_desc` varchar(200) DEFAULT NULL,
   `price` DOUBLE(6,2) NOT NULL,
   `stock` int NOT NULL,
-  PRIMARY KEY (`product_id`),
-  UNIQUE KEY `product_name_UNIQUE` (`product_name`)
+  PRIMARY KEY (`product_id`)
 );
 CREATE TABLE IF NOT EXISTS `store_db`.`orders` (
   `order_id` BIGINT NOT NULL AUTO_INCREMENT,
