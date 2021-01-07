@@ -15,6 +15,8 @@ import org.apache.logging.log4j.Logger;
 import com.qa.ims.persistence.domain.Customer;
 import com.qa.ims.utils.DBUtils;
 
+
+
 public class CustomerDAO implements Dao<Customer> {
 	
 	private OrderDAO orderDAO = new OrderDAO();

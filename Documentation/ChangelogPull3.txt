@@ -1,0 +1,5 @@
+Product.java: Created the base product class to emulate the sql table along with the necessary constructors, getters, setters, toString and equals methods
+
+ProductDAO.java: Created the class as an implementation of Dao.java and set up the create and modelFromResultSet method that allow a product to be entered into the database and for it to be retrieved correctly.
+
+ProductController.java: Created the class as an implementation of CrudController.java and set up the create method that takes the user inputs and makes a product object from them.

@@ -1,0 +1,37 @@
+IMS.java: Added a constructor to the class so that it could be tested.
+
+Action.java: Removed redundant switchAction() method.
+
+Domain.java: Removed redundant switchDomain() method.
+
+CustomerController.java: Added in a LOGGER to delete() to inform users that a customer has been deleted.
+
+OrderController.java: Added an email check to delete() to stop users deleting other peoples orders.
+
+OrderLineSubController.java: Implemented decision making logic for when a customer tries to order a larger quantity than available within both createOrderLine() and updateOrderLine(). Removed the LOGGER in updateOrderLine() that was duplicating all orderline outputs, the LOGGER in deleteOrderLine() was removed for the same reason. Added a list of products before the user selects what product they would like in updateOrderLine() and made it so the end of method LOGGER outputted the concatinated Orderline and product object that represents the created orderline instead of the orderline itself to increase user readability.
+
+CustomerDAO.java: Overhauled delete() as I realised that the sql delete command returns the number of lines deleted. Obviously this caused massive issues with testing as to delete a customer you have to delete all associated orders and to delete an order you have to delete all associated orderlines. This value could be anywhere from 0 to infinity for each step so relying on a specific value return from either OrderLineDAO.deleteOrder() or orderDAO.deleteCustomer()_ was not feasible.
+
+OrderDAO.java: Same steps taken as CustomerDAO.java with the added internal overhaul of deleteCustomer() by returning a 1 if a database connection has been established instead of the number of deleted lines.
+
+OrderLineDAO.java: Same overhaul for deleteProduct() and deleteOrder()_ as OrderDAO.deleteCustomer(). Created a new method readOrderLineAndProduct() that allows a single orderline and product combined object to be displayed. Added a new method setOrderLineQuantToZero() that updates an orderlines product quantity to zero once the user has decided that they want to update that particular orderline.
+
+ProductDAO.java: Same delete() overhaul as in CustomerDAO.java. Added a new method stockCheck() that checks whether a users input quantity can be achieved or not and updates the products stock accordingly. Created a new method removeStockFromOrder() that is used by OrderLineDAO.updateOrderLine() to add the stock that was intially allocated to the user when they created an orderline back to the total stock count as in OrderLineDAO.updateOrderLine() the user is given the option to update an orderline to include a new product.
+
+sql-data.sql: Changed the inserted customer email to a simpler one for demo purposes.
+
+sql-schema.sql Removed the UNIQUE identifier from product name as this was causing some errors where updates were claiming that the newly updated name wasn't unique even though it was.
+
+IMSTest.java: created a test that runs through all the states within the imsSystem() and doAction()_ methods.
+
+OrderControllerTest.java: Added appropriate mocking to delete() tests to reflect changes in code.
+
+OrderLineController.java: Added appropriate mocking to the testCreateOrderLine() method and created a new test to check that the method would work when a user requests more products than are in stock. The same was done for testUpdateOrderLine().
+
+CustomerDAOFailDBTest.java, OrderDAOFailDBTest.java, OrderLineDAOFailDBTest.java, ProductDAOFailDBTest.java: Created a test for each DAO to check the catch statements when access to the database is rejected due to an incorrect username or password.
+
+CustomerDAOTest.java: Added more customers to check that all methods still functioned as intended with more data.
+
+OrderLineDAOTest.java:, OrderDAOTest.java: Added more customers, products, orders and orderlines to check that all methods still functioned as intended with more data.
+
+ProductDAOTest.java: Added more products to check that all methods still functioned as intended with more data. Implemented tests for all new methods.

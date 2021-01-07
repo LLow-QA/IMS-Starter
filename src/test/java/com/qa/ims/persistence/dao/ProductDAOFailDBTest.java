@@ -12,6 +12,7 @@ import org.junit.Test;
 import com.qa.ims.persistence.domain.Product;
 import com.qa.ims.utils.DBUtils;
 
+
 public class ProductDAOFailDBTest {
 	
 	private final ProductDAO productDAO = new ProductDAO();
