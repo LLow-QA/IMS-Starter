@@ -1,0 +1,53 @@
+IMS.java: Added OrderLineDAO
+
+Runner.java: Changed the text output when the application ends.
+
+CustomerController.java: cleaned up code.
+
+Action.java: Added (now redundant) switchAction() method. Should be deleted.
+
+Domain.java Added (now redundant) switchDomain() method. Should be deleted.
+
+OrderController.java: Re-designed readAll() to ask the user if they would like to see all orders and associated orderlines or just orders. Re-designed create() to make it more readable and easier to navigate through. Changed the way date was calculated as using millis was overly complicated when day was the smallest time increment wanted. Removed a large amount of redundant code around the total cost updater as this was all done in OrderDAO.updateTotalPriceCreate(). Completely overhauled update() for the same reasons as create(). Expanded delete() in the same way as readAll() giving the user the option to delete an entire order or just remove a single orderline within one. Created a new method checkEmail() that used to sit in both create and update reducing the unnecessary duplicating of code. The method takes a users email and checks if they have an account. It returns the customers ID if they do or directs them to create an account with the required commands.
+
+OrderLineController.java: Accidentally deleted in a fit of rage. Was redundant but would have been quicker to repurpose than have to drag up the old code.
+
+OrderLineSubController.java: New file that replaces OrderLineController.java. Realised that interfacing controllers could not throw commands to eachother and as I didnt want users to interact with the orderline table independantly of checking,making,updating or deleting an order I removed its CrudController implementation and now have it working as a subclass of both order and product. Its methods are as follows. readAllOrderLines(): Runs when called in OrderController.readAll() if a user wants to see all orderlines associated with each order. createOrderLine(): Runs within OrderController.create(), allows the user to create many orderlines within their order whilst they are creating it. updateOrderLine(): Runs within __OrderController.update(), allows the user to adjust the quantities of each product they want to change within an order. deleteOrderLine(): Deletes an orderline if it is contained within the order when asked to by OrderController.delete().
+
+ProductController.java: Cleaned up the code a little.
+
+CustomerDAO.java: Added OrderDAO and OrderLineDAO local instances. Fleshed out the delete() method so that it didn't suffer from foreign key dependancy issues whilst deleting, i.e. had to delete all orders associated with a customer before the customer object could itself be deleted.
+
+OrderDAO.Java: Changed Date import to use sql date formatting. Added OrderLineDAO instance. Added single quotes around date in create() and update() to line up with sql syntax. Fleshed out delete so that it didnt suffer from foreign key dependancies by deleting all orderlines containing the given order ID. In deleteCustomer() the executeUpdate() statement was changed so that orders were deleted based upon the customer ID not order ID. UpdateTotalPriceCreate() changed method to take a Long (order ID) as an input, changed the executeUpdate() statement so that it would perform as desired and added another executeUpdate() statement to put the new total into the order. Changed the return value to readOrder(orderID) from readOrder(readLatest().getOrderID()) as it felt cumbersome. Updated allOrdersByCust() to return a list of orders instead of a singular order as one customer can make multiple orders, internals of the method were changed to reflect this. Created a new method readOrderByCustomer() that took the output of allOrdersByCust and formatted them using toString().
+
+OrderLineDAO.java: Added in functionality to delete() so that it would properly delete orderlines. created two new methods deleteProduct() and deleteOrder() that deal with foreign key dependacies of each table by deleting all orderlines that include their respective keys. Altered allOrderLinesByOrder() as it previously returned a result set, it now utilises a new object called OrderLineAndProduct which will be described later. Also created a new modelFromResultSet() called newModelFromResultSet() in order to properly convert the result set to a readable list. Changed the output of updateTotalPriceUpdate to a Double as I had previously put it as a float for some unknown reason.
+
+ProductDAO.java: Added an orderLineDAO instance. changed the executeUpdate() statement in create() so that it inserted into the products table and removed some extra single apostrophes were removed. Removed and extra set of brackets from the executeUpdate() statement in update(). Added code into delete() to remove foreign key dependancies. Added code to returnProductID() so that it would return a null value if the input from the user didn't match up with a product. Added a new method called listToString() that takes all products and converts them to printable strings so that they can be displayed easily when the user is choosing which product to buy in OrderLineSubController.java.
+
+Customer.java: Made the toString() method nicer to read.
+
+Order.java: Changed Date to sql, totalCost to Double and made the toString() method nicer to read.
+
+OrderLine.java: Made the toString() method nicer to read.
+
+OrderLineAndProduct.java: created a new object class that takes some values from order line and some from product. The main purpose of this object is to increase readability for the user by putting the order line ID, product name, order quantity and price all within one table.
+
+Product.java: Made the toString() method nicer to read.
+
+Utils.java: Created a method scannerClose() to ensure multiple scanner instances do not occur.
+
+sql-data.sql: Updated the input date format for orders so that it fit the sql format. Changed ` to ' for string inputs.
+
+sql-schema.sql: Changed all ID types to BIGINT, changed price and total_cost to double.
+
+OrderControllerTest.java: Created a full test for OrderController.java.
+
+OrderLineSubControllerTest.java: Created a full test for OrderLineSubController.java.
+
+CustomerDAOTest.java: Removed the commented out testDeleteFalse() method.
+
+OrderDAOTest.java: Created a full test for OrderDAO.java.
+
+OrderLineDAOTest.java: Created a full test for OrderLineDAO.java.
+
+ProductDAOTest.java: Created a full test for productDAO.java.

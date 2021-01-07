@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.utils.Utils;
 
+
 public enum Domain {
 
 	CUSTOMER("Information about customers"), PRODUCT("Individual Items"), ORDER("Purchases of items"),

@@ -1,0 +1,15 @@
+Order.java: Created the Order class with all necessary constructors, getters, setters, toString() and equals() methods to satisfy it as an object mirroring the orders table.
+
+OrderDAO.java: Created the DAO class so that the program could perform CRUD functionality on the orders table.
+
+OrderController.java: Created the user input controller for orders. Realised that create and update are fundamentally tied to order line so that would need to be created before completion. Read and delete functionality are complete.
+
+OrderLine.java: Created the OrderLine class with all necessary constructors, getters, setters, toString() and equals() methods to satisfy it as an object mirroring the orderline table.
+
+OrderLineDAO.java: Have just created it as a new class, not methods yet.
+
+OrderLineController.java: Same as OrderLineDAO.java.
+
+CustomerDAO.java: Added two new methods to help with creating orders as the orders table has the customer ID as a foreign key. One method checks if the customers email already exists in the table returning true if it does and false if not. The other returns the customer ID associated with a matching email for orders.
+
+Utils.java: Attempted to make a date input parser before realising that java had its own inbuilt get date type functions so no actual changes were made.
