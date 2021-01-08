@@ -110,7 +110,7 @@ public class OrderDAO implements Dao<Order>{
 				Statement statement = connection.createStatement();) {
 			
 			statement.executeUpdate("update orders set customer_id = " + order.getCustomerID() + ", date_ordered = '"
-					+ order.getDateOrdered() + "', total_cost = " + order.getTotalCost());
+					+ order.getDateOrdered() + "', total_cost = " + order.getTotalCost() + " WHERE order_id = " + order.getOrderID() + ";");
 			
 			return readOrder(order.getOrderID());
 			

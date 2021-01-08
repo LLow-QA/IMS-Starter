@@ -47,6 +47,7 @@ public class IMS {
 		LOGGER.info("What is your password");
 		String password = utils.getString();
 
+		DBUtils.getInstance();
 		DBUtils.connect(username, password);
 		Domain domain = null;
 

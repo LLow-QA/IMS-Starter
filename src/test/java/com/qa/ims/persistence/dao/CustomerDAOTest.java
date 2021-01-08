@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,7 +23,7 @@ public class CustomerDAOTest {
 
 	@BeforeClass
 	public static void init() {
-		DBUtils.connect("root", "root");
+		DBUtils.connect("root", "password123!");
 	}
 
 	@Before
@@ -93,6 +94,13 @@ public class CustomerDAOTest {
 	public void testReturningCustomersFalse() {
 		final String email = "NOTANEMAIL";
 		assertFalse(DAO.returningCustomer(email));
+	}
+	
+	@After
+	public void teardown() {
+		
+		DBUtils.getInstance().init("src/test/resources/sql-schema.sql", "src/test/resources/sql-data.sql");
+		
 	}
 	
 }
