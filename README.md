@@ -2,12 +2,12 @@ Coverage: 88.3%
 # Project Title
 
 The aim of this project was to build a functioning inventory management system for a retailer. It had to consist of of a managed database, containing
-tables of customers products and orders, a functional front end user interface and all the necesary back end fucntionality to link the two together.
+tables of customers products and orders, a functional front end user interface and all the necessary back end fucntionality to link the two together.
 
 ## Getting Started
 
 git clone https://github.com/LLow-QA/IMS-Starter.git
-
+Jira project board link https://20novsoftware2lloyd.atlassian.net/secure/RapidBoard.jspa?rapidView=3&projectKey=FPI
 ### Prerequisites
 
 A Java IDE

@@ -1,0 +1,19 @@
+README.md: Filled out as much of the read me as I could.
+
+IMS.java: Added DBUtils.getInstance() to guarantee database creation.
+
+CustomerController.java: Added readAll() to update() and delete() so that users could see what customers are present in the table.
+
+OrderController.java Added a test to delete() that ensured the method ended if an incorrect email was entered.
+
+ProductController.java: Added readAll() to update() and delete() so that users could see what products are present in the table.
+
+CustomerDAO.java, OrderDAO.java, OrderLineDAO.java, ProductDAO.java: Added spacing to the executeUpdate statement so that they will update objects based upon their IDs.
+
+Utils.java: Changed all the get methods so that the scanner is now inside the while loop. This means that when an improper input is put in they won't fail.
+
+OrderControllerTest.java: Removed unnecessary @BeforeClass and the .init(). Updated the delete tests to reflect the changes in OrderController.delete() and a new test for the null branch that had been created.
+
+CustomerDAOTest.java, ProductDAOTest.java, OrderLineDAOTest.java, OrderDAOTest.java: Added an @after class to reinitialize the data base to prevent leakage.
+
+Compiled a Fat Jar with dependencies to allow the project to be run without an IDE.
