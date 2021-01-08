@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -18,7 +19,7 @@ public class ProductDAOTest {
 
 	@BeforeClass
 	public static void init() {
-		DBUtils.connect("root", "root");
+		DBUtils.connect("root", "password123!");
 	}
 
 	@Before
@@ -134,9 +135,12 @@ public class ProductDAOTest {
 		
 		assertEquals(newStockQuant,productDAO.removeStockFromOrder(orderLineID));
 		
-
+	}
+	
+	@After
+	public void teardown() {
 		
-		
+		DBUtils.getInstance().init("src/test/resources/sql-schema.sql", "src/test/resources/sql-data.sql");
 		
 	}
 

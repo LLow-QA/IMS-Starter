@@ -10,7 +10,6 @@ import java.sql.Date;
 
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -29,7 +28,6 @@ import com.qa.ims.persistence.dao.ProductDAO;
 import com.qa.ims.persistence.domain.Order;
 import com.qa.ims.persistence.domain.OrderLine;
 import com.qa.ims.persistence.domain.OrderLineAndProduct;
-import com.qa.ims.utils.DBUtils;
 import com.qa.ims.utils.Utils;
 
 
@@ -39,12 +37,7 @@ public class OrderControllerTest {
 	private final LocalDate date = LocalDate.now();
 	private final Date orderDate = Date.valueOf(date); 
 
-	@BeforeClass
-	public static void init() {
-		
-		DBUtils.connect("root", "root");
-		
-	}
+	
 	
 	@Mock
 	private Utils utils;
@@ -70,7 +63,6 @@ public class OrderControllerTest {
 	@Before
 	public void build() {
 		
-		DBUtils.getInstance().init("src/test/resources/sql-schema.sql", "src/test/resources/sql-data.sql");
 		MockitoAnnotations.initMocks(this);
 		
 	}
@@ -179,17 +171,23 @@ public class OrderControllerTest {
 		
 		final String EMAIL = "ll@qa.com";
 		final long ID = 1L, customerID = 1L;
+		List<Order> orders = new ArrayList<>();
+		orders.add(new Order(1L,1L,orderDate,3.98));
 
 		Mockito.when(utils.getString()).thenReturn(EMAIL);
 		Mockito.when(customerDAO.returningCustomer(EMAIL)).thenReturn(true);
 		Mockito.when(customerDAO.returningCustomerID(EMAIL)).thenReturn(customerID);
+		Mockito.when(orderDAO.readOrdersByCustomer(customerID)).thenReturn(orders);
 		Mockito.when(utils.getLong()).thenReturn(ID);
 		Mockito.when(utils.getBool()).thenReturn(true);
 		Mockito.when(orderDAO.delete(ID)).thenReturn(1);
 
 		assertEquals(1L, this.orderController.delete());
 
-		
+		Mockito.verify(utils,Mockito.times(1)).getString();
+		Mockito.verify(customerDAO, Mockito.times(1)).returningCustomer(EMAIL);
+		Mockito.verify(customerDAO, Mockito.times(1)).returningCustomerID(EMAIL);
+		Mockito.verify(orderDAO,Mockito.times(1)).readOrdersByCustomer(customerID);
 		Mockito.verify(utils, Mockito.times(1)).getLong();
 		Mockito.verify(utils,Mockito.times(1)).getBool();
 		Mockito.verify(orderDAO, Mockito.times(1)).delete(ID);
@@ -201,17 +199,23 @@ public class OrderControllerTest {
 		
 		final String EMAIL = "ll@qa.com";
 		final long ID = 1L, customerID = 1L;
+		List<Order> orders = new ArrayList<>();
+		orders.add(new Order(1L,1L,orderDate,3.98));
 
 		Mockito.when(utils.getString()).thenReturn(EMAIL);
 		Mockito.when(customerDAO.returningCustomer(EMAIL)).thenReturn(true);
 		Mockito.when(customerDAO.returningCustomerID(EMAIL)).thenReturn(customerID);
+		Mockito.when(orderDAO.readOrdersByCustomer(customerID)).thenReturn(orders);
 		Mockito.when(utils.getLong()).thenReturn(ID);
 		Mockito.when(utils.getBool()).thenReturn(false);
 		Mockito.when(ordSub.deleteOrderLine(ID)).thenReturn(1);
 
-		assertEquals(1L, this.orderController.delete());
+		assertEquals(1, this.orderController.delete());
 
-		
+		Mockito.verify(utils,Mockito.times(1)).getString();
+		Mockito.verify(customerDAO, Mockito.times(1)).returningCustomer(EMAIL);
+		Mockito.verify(customerDAO, Mockito.times(1)).returningCustomerID(EMAIL);
+		Mockito.verify(orderDAO,Mockito.times(1)).readOrdersByCustomer(customerID);
 		Mockito.verify(utils, Mockito.times(1)).getLong();
 		Mockito.verify(utils,Mockito.times(1)).getBool();
 		Mockito.verify(ordSub, Mockito.times(1)).deleteOrderLine(ID);
@@ -269,6 +273,24 @@ public class OrderControllerTest {
 		
 	}
 	
+	@Test
+	public void testDeleteWrongEmail() {
+		
+		
+		final int ret = -1;
+		
+		final String NOTANEMAIL = "ddd";
+		
+
+		Mockito.when(utils.getString()).thenReturn(NOTANEMAIL);
+		Mockito.when(customerDAO.returningCustomer(NOTANEMAIL)).thenReturn(false);
+		
+		assertEquals(ret,orderController.delete());
+		
+		Mockito.verify(utils,Mockito.times(1)).getString();
+		Mockito.verify(customerDAO,Mockito.times(1)).returningCustomer(NOTANEMAIL);
+		
+	}
 }
 
 	

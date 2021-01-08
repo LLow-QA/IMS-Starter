@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -29,7 +30,7 @@ public class OrderDAOTest {
 	
 	@BeforeClass
 	public static void init() {
-		DBUtils.connect("root", "root");
+		DBUtils.connect("root", "password123!");
 	}
 
 	@Before
@@ -156,6 +157,13 @@ public class OrderDAOTest {
 		customerOrders.add(new Order(4L,2L,dateOrdered,35.45));
 	
 		assertEquals(customerOrders,orderDAO.readOrdersByCustomer(customerID));
+	}
+	
+	@After
+	public void teardown() {
+		
+		DBUtils.getInstance().init("src/test/resources/sql-schema.sql", "src/test/resources/sql-data.sql");
+		
 	}
 
 }

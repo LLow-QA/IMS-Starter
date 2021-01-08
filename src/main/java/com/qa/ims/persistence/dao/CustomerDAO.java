@@ -150,7 +150,7 @@ public class CustomerDAO implements Dao<Customer> {
 					+ customer.getSurname() + "', age = " + customer.getAge() + ", email = '"
 					+ customer.getEmail() + "', password = '" + customer.getPassword() + "', address = '" 
 					+ customer.getAddress() + "', postcode = '" + customer.getPostcode() +
-					"' where customer_id =" + customer.getId());
+					"' where customer_id = " + customer.getId() + ";");
 			
 			return readCustomer(customer.getId());
 			

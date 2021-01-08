@@ -111,7 +111,8 @@ public class OrderLineDAO implements Dao<OrderLine>{
 				Statement statement = connection.createStatement();) {
 			
 			statement.executeUpdate("update orderline set order_id = " + orderLine.getOrderID() +
-					", product_id = "+ orderLine.getProductID() + ", product_quantity = " + orderLine.getQuantity());
+					", product_id = "+ orderLine.getProductID() + ", product_quantity = " + orderLine.getQuantity() +
+					" WHERE orderline_id = " + orderLine.getOrderLineID() + ";");
 			
 			return readOrderLine(orderLine.getOrderLineID());
 			

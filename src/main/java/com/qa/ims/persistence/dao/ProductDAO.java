@@ -96,7 +96,7 @@ public class ProductDAO implements Dao<Product> {
 			
 			statement.executeUpdate("update products set product_name = '" + product.getName() + "', product_desc = '"
 					+ product.getDescription() + "', price = " + product.getPrice() + ", stock = "
-					+ product.getStock() + ";");
+					+ product.getStock() + " WHERE product_id = " + product.getId() + ";");
 			
 			return readProduct(product.getId());
 			

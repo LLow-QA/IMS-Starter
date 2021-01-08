@@ -52,6 +52,7 @@ public class CustomerController implements CrudController<Customer> {
 	@Override
 	public Customer create() {
 		
+		
 		LOGGER.info("Please enter your first name: ");
 		String firstName = utils.getString();
 		
@@ -86,6 +87,8 @@ public class CustomerController implements CrudController<Customer> {
 	 */
 	@Override
 	public Customer update() {
+		
+		readAll();
 		
 		LOGGER.info("Please enter the id of the customer you would like to update: ");
 		Long id = utils.getLong();
@@ -126,6 +129,8 @@ public class CustomerController implements CrudController<Customer> {
 	 */
 	@Override
 	public int delete() {
+		
+		readAll();
 		
 		LOGGER.info("Please enter the id of the customer you would like to delete: ");
 		Long id = utils.getLong();

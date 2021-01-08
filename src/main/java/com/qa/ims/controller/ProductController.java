@@ -63,6 +63,8 @@ public class ProductController implements CrudController<Product>{
 	@Override
 	public Product update() {
 		
+		readAll();
+		
 		LOGGER.info("Please enter the id of the product you would like to update: ");
 		Long id = utils.getLong();
 		
@@ -80,15 +82,19 @@ public class ProductController implements CrudController<Product>{
 		
 		
 		Product product = productDAO.update(new Product(id, name, desc, price, stock));
-		LOGGER.info("Customer Updated");
+		LOGGER.info("Product Updated");
 		return product;
 	}
 
 	@Override
 	public int delete() {
+		
+		readAll();
+		
 		LOGGER.info("Please enter the id of the product you would like to delete: ");
 		Long id = utils.getLong();
 		
+		LOGGER.info("Product deleted");
 		return productDAO.delete(id);
 	}
 	

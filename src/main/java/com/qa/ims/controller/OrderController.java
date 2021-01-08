@@ -139,20 +139,26 @@ public class OrderController implements CrudController<Order> {
 	@Override
 	public int delete() {
 		
-		orderDAO.readOrdersByCustomer(emailCheck());
-		LOGGER.info("Please enter the id of the order you would like to delete: ");
-		Long orderID = utils.getLong();
-		
-		LOGGER.info("Do you want to delete all items from the order? (y/n)");
-		boolean decision = utils.getBool();
-		
-		if (decision) {
+		if(orderDAO.readOrdersByCustomer(emailCheck()).isEmpty()) {
 			
-			return orderDAO.delete(orderID);
+			LOGGER.info("Nothing deleted.");
+			return -1;
 			
 		}else {
+			LOGGER.info("Please enter the id of the order you would like to delete: ");
+			Long orderID = utils.getLong();
 			
-			return ordSub.deleteOrderLine(orderID);	
+			LOGGER.info("Do you want to delete all items from the order? (y/n)");
+			boolean decision = utils.getBool();
+			
+			if (decision) {
+				
+				return orderDAO.delete(orderID);
+				
+			}else {
+				
+				return ordSub.deleteOrderLine(orderID);	
+			}
 		}
 	}
 	
