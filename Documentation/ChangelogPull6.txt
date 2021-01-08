@@ -1,0 +1,11 @@
+OrderLineDAO.java: Completed CRUD functionality so that the program can interact with the sql table.
+
+OrderLineController.java: Implemented read all and delete functionality. Also implemented create functionality that allows multiple products to be ordered under the same order_id.
+
+CustomerController.java: Increased readability.
+
+ProductDAO.java: Created a method that returns a product_id based on the products name so that the user can specify what product they want without having to know the ids.
+
+OrderDAO.java: Created a method that updates the total cost of an order based on the number of orderlines created that relate to that single order_id.
+
+OrderController.java: Continued to add functionality to the create method. Should be in working order now where it asks for a valid email to create an order (if no valid email can be found it redirects to the customer creator), then creates an Order with a total price of 0. It then allows the user to create as many orderlines as they would like using OrderLineDAO.javas create method and returns the order with the correct price.

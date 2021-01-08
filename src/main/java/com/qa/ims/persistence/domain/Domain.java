@@ -5,9 +5,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.qa.ims.utils.Utils;
 
+
 public enum Domain {
 
-	CUSTOMER("Information about customers"), ITEM("Individual Items"), ORDER("Purchases of items"),
+	CUSTOMER("Information about customers"), PRODUCT("Individual Items"), ORDER("Purchases of items"),
 	STOP("To close the application");
 
 	public static final Logger LOGGER = LogManager.getLogger();
@@ -40,5 +41,4 @@ public enum Domain {
 		}
 		return domain;
 	}
-
 }

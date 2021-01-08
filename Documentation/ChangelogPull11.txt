@@ -1,0 +1,5 @@
+Added the changelogs I have been writing here to the project documentation.
+
+UMLDiagram.ucls: Created a UML diagram of the project.
+
+Added the ERD and UML pngs.

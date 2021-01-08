@@ -1,3 +1,5 @@
+//ARE YOU ON A FEATURE BRANCH
+
 package com.qa.ims;
 
 import org.apache.logging.log4j.LogManager;
@@ -6,7 +8,11 @@ import org.apache.logging.log4j.Logger;
 import com.qa.ims.controller.Action;
 import com.qa.ims.controller.CrudController;
 import com.qa.ims.controller.CustomerController;
+import com.qa.ims.controller.OrderController;
+import com.qa.ims.controller.ProductController;
 import com.qa.ims.persistence.dao.CustomerDAO;
+import com.qa.ims.persistence.dao.OrderDAO;
+import com.qa.ims.persistence.dao.ProductDAO;
 import com.qa.ims.persistence.domain.Domain;
 import com.qa.ims.utils.DBUtils;
 import com.qa.ims.utils.Utils;
@@ -16,12 +22,23 @@ public class IMS {
 	public static final Logger LOGGER = LogManager.getLogger();
 
 	private final CustomerController customers;
+	private final OrderController orders;
+	private final ProductController products;
 	private final Utils utils;
+	
 
 	public IMS() {
 		this.utils = new Utils();
+		
 		final CustomerDAO custDAO = new CustomerDAO();
 		this.customers = new CustomerController(custDAO, utils);
+		
+		final OrderDAO ordDAO = new OrderDAO();
+		this.orders = new OrderController(ordDAO, utils);
+		
+		final ProductDAO prodDAO = new ProductDAO();
+		this.products = new ProductController(prodDAO, utils);
+		
 	}
 
 	public void imsSystem() {
@@ -30,8 +47,10 @@ public class IMS {
 		LOGGER.info("What is your password");
 		String password = utils.getString();
 
+		DBUtils.getInstance();
 		DBUtils.connect(username, password);
 		Domain domain = null;
+
 		do {
 			LOGGER.info("Which entity would you like to use?");
 			Domain.printDomains();
@@ -45,11 +64,11 @@ public class IMS {
 				case CUSTOMER:
 					active = this.customers;
 					break;
-				case ITEM:
-					active = null;
+				case PRODUCT:
+					active = this.products;
 					break;
 				case ORDER:
-					active = null;
+					active = this.orders;
 					break;
 				case STOP:
 					return;
@@ -70,6 +89,7 @@ public class IMS {
 			} while (!changeDomain);
 		} while (domain != Domain.STOP);
 	}
+
 
 	public void doAction(CrudController<?> crudController, Action action) {
 		switch (action) {
@@ -92,4 +112,16 @@ public class IMS {
 		}
 	}
 
+	public IMS(CustomerController customers, OrderController orders, ProductController products, Utils utils) {
+		super();
+		this.customers = customers;
+		this.orders = orders;
+		this.products = products;
+		this.utils = utils;
+	}
+
+
+
+	
+	
 }

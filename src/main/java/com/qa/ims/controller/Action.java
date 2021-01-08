@@ -56,5 +56,5 @@ public enum Action {
 		} while (action == null);
 		return action;
 	}
-
+	
 }

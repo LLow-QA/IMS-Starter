@@ -1,0 +1,9 @@
+IMS.java: Implemented the switch case functionality for products and orders so that customers could choose what to do.
+
+OrderController.java: Implemented update functionality.
+
+OrderLineController.java: Implemented update functionality that is called within OrderController.java's update method.
+
+OrderDAO.java: created a method called allOrdersByCust that finds all orders associated with a customer ID so that they can choose which one they want to update.
+
+OrderLineDAO.java: created a method called allOrderLinesByOrder that finds all orderlines associated with a certain order ID so that customers can choose which one they wish to alter. Also created a method called updateTotalPriceUpdate that takes the potentially updated prices and quantities once a customer has finished updating their order, sums them and returns the total.

@@ -1,0 +1,23 @@
+CustomerControllerTest.java: Altered the test values to properly reflect the controller outputs. 70% coverage.
+
+CustomerController.java: Bug and error fixing that meant tests failed.
+
+CustomerDAOtest.java: Altered the test values to properly reflect the DAO interactions with the database. Also added tests for the extra methods I had created within the DAO. 80% coverage.
+
+CustomerDAO.java: Bug and error fixing that meant tests failed.
+
+Customer.java: Moved around some getters and setters to improve readability.
+
+OrderDAO.java: preemptive removal of copy-paste errors from CustomerDAO.java.
+
+OrderLineDAO.java: preemptive removal of copy-paste errors from CustomerDAO.java.
+
+ProductDAO.java: preemptive removal of copy-paste errors from CustomerDAO.java.
+
+DBUtils.java: Altered the DB_URL value to better reflect the databases exact location.
+
+src/main/resources/sql-data.sql and src/test/resources/sql-data.sql: changed the test and runner populating data so that they would populate the correct database for testing purposes and so that I could check CRUD functionality without having to create each time.
+
+src/main/resources/sql-schema and src/test/resources/sql-schema: changed both so that it would recreate the database and reset all auto-incrementing stages for testing purposes. Will remove from main once testing has concluded as it removes all logged data from the database each time the app runs.
+
+ProductControlelrTest.java: created a CRUD Mockito test bench to test ProductController.java. 72.5% coverage.

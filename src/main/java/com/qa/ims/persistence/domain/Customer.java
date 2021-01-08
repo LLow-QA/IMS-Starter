@@ -1,3 +1,5 @@
+//ARE YOU ON A FEATURE BRANCH
+
 package com.qa.ims.persistence.domain;
 
 public class Customer {
@@ -5,16 +7,38 @@ public class Customer {
 	private Long id;
 	private String firstName;
 	private String surname;
+	private int age;
+	private String email;
+	private String address;
+	private String postcode;
+	private String password;
 
-	public Customer(String firstName, String surname) {
+	public Customer(String firstName, String surname,int age, String email, String password,
+					String address, String postcode) {
+		
 		this.firstName = firstName;
 		this.surname = surname;
+		this.age = age;
+		this.email = email;
+		this.password  = password;
+		this.address = address;
+		this.postcode = postcode;
+		
+		
 	}
 
-	public Customer(Long id, String firstName, String surname) {
+	public Customer(Long id, String firstName, String surname,int age, String email, String password, 
+					String address, String postcode) {
+		
 		this.id = id;
 		this.firstName = firstName;
 		this.surname = surname;
+		this.age = age;
+		this.email = email;
+		this.password  = password;
+		this.address = address;
+		this.postcode = postcode;
+		
 	}
 
 	public Long getId() {
@@ -41,9 +65,52 @@ public class Customer {
 		this.surname = surname;
 	}
 
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPostcode() {
+		return postcode;
+	}
+
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	@Override
 	public String toString() {
-		return "id:" + id + " first name:" + firstName + " surname:" + surname;
+		
+		return "Customer: Customer ID = " + id + ", First name = " + firstName + ", Surname = " + surname + ", Age = " + age + ", Email = "
+				+ email + ", Password = " + password + ", Address = " + address + ", Postcode = " + postcode;
+		
 	}
 
 	@Override
@@ -55,6 +122,18 @@ public class Customer {
 		if (getClass() != obj.getClass())
 			return false;
 		Customer other = (Customer) obj;
+		if (address == null) {
+			if (other.address != null)
+				return false;
+		} else if (!address.equals(other.address))
+			return false;
+		if (age != other.age)
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
 		if (firstName == null) {
 			if (other.firstName != null)
 				return false;
@@ -65,6 +144,16 @@ public class Customer {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
+		if (postcode == null) {
+			if (other.postcode != null)
+				return false;
+		} else if (!postcode.equals(other.postcode))
+			return false;
 		if (surname == null) {
 			if (other.surname != null)
 				return false;
@@ -72,5 +161,7 @@ public class Customer {
 			return false;
 		return true;
 	}
+
+
 
 }

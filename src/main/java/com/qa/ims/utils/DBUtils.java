@@ -1,3 +1,5 @@
+//ARE YOU ON A FEATURE BRANCH
+
 package com.qa.ims.utils;
 
 import java.io.BufferedReader;
@@ -19,7 +21,7 @@ public class DBUtils {
 
 	private final String DB_PASS;
 
-	private final String DB_URL = "jdbc:mysql://localhost:3306/ims";
+	private final String DB_URL = "jdbc:mysql://127.0.0.1:3306/store_db";
 
 	private DBUtils(String username, String password) {
 		this.DB_USER = username;

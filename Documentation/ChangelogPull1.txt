@@ -1,0 +1,1 @@
+Utils.java: Added an integer and boolean parser and updated the getString method so that it automatically converted the input to lower case.

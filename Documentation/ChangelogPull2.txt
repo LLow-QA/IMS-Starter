@@ -1,0 +1,17 @@
+Domain.java: Refactored enum ITEM to PRODUCT.
+
+IMS.java: Change due to refactor of enum ITEM to PRODUCT.
+
+Customer.java: Updated constructors, getters, setters, toString() and equals() to reflect the increased number of columns in my customers table.
+
+CustomerDAO.java: updated modelFromResultSet, create and update to include all table columns. Updated readCustomer, readLatest and delete id was changed to customer_id in the sql command to reflect the relevant column.
+
+CustomerController.java: Updated create and update to be able to gather all the needed information.
+
+CustomerControllerTest.java: Added the necessary columns to the tests so that they would work.
+
+CustomerDAOTest.java: Added the necessary columns to the tests so that they would work.
+
+DBUtils.java: Changed the DB_URL to my databases.
+
+Utils.java: Spaced things out for readability.
