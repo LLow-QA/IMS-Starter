@@ -50,8 +50,9 @@ End with an example of getting some data out of the system or using it for a lit
 
 ## Running the tests
 
-Run all tests with the command: mvn clean package
-
+Clean target folder then package and run all tests with the command: mvn clean package
+Just run tests with the command: mvn test
+Run a specific test with: mvn -Dit.test="EnterTestCaseHere" verify
 
 ### Unit Tests 
 
@@ -68,14 +69,6 @@ Integration testing is testing many test classes at once to ensure that they do 
 this tests that actions undertaken in previous tests dont flow through into others accidentally.
 ```
 Testing all controllers, all DAOS or the entire test package
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-Test that the coding style used is efficient and fit for purpose
-```
-Give an example
 ```
 
 ## Deployment
